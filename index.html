@@ -1,10 +1,60 @@
-<!DOCTYPE html>
+// Initialize compass
+            setTimeout(() => {
+                if (!orientationSupported) {
+                    fallbackCompass();
+                }
+            }, 1000);
+            
+            // Initialize car position
+            const car = document.getElementById('movingCar');
+            if (car) {
+                car.style.left = '180px';
+                car.style.top = '380px';
+                car.style.transform = 'rotate(90deg)';
+            }                <!-- Helymegjelölő -->        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }        /* Mozgó autó */
+        .moving-car {
+            position: absolute;
+            font-size: 16px;
+            z-index: 6;
+            transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+        
+        .car-path {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(237, 70, 56, 0.3) 10%, 
+                rgba(237, 70, 56, 0.6) 50%, 
+                rgba(237, 70, 56, 0.3) 90%, 
+                transparent 100%
+            );
+            border-radius: 1px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .car-path.active {
+            opacity: 1;
+            animation: pathGlow 2s ease-in-out;
+        }
+        
+        @keyframes pathGlow {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.5); }
+        }<!DOCTYPE html>
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autókereskedés Térkép</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Autó Dual Térkép</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -14,285 +64,390 @@
         
         :root {
             --primary: #ED4638;
-            --white: #FFFFFF;
-            --light-gray: #F3F4F6;
-            --dark-text: #333333;
-            --secondary-text: #868D98;
-            --shadow: rgba(0,0,0,0.1);
+            --secondary: #34a853;
+            --danger: #ED4638;
+            --warning: #fbbc04;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
+            --medium-gray: #e8eaed;
+            --dark-gray: #333333;
+            --text-primary: #202124;
+            --text-secondary: #868D98;
+            --shadow-light: rgba(60,64,67,0.1);
+            --shadow-medium: rgba(60,64,67,0.15);
+            --shadow-heavy: rgba(60,64,67,0.3);
+            --map-road: #ffffff;
+            --map-area: #f1f3f4;
+            --map-water: #a8dadc;
+            --map-green: #c8e6c9;
         }
         
         body {
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: var(--light-gray);
             min-height: 100vh;
             padding: 16px;
-            color: var(--dark-text);
+            color: var(--text-primary);
         }
         
         .container {
-            max-width: 450px;
+            max-width: 420px;
             margin: 0 auto;
             background: var(--white);
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 20px var(--shadow);
+            box-shadow: 0 2px 10px var(--shadow-light);
         }
         
         .header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 100%);
             padding: 24px 20px;
             text-align: center;
             color: var(--white);
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+            opacity: 0.1;
         }
         
         .header h1 {
             font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            letter-spacing: -0.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
         }
         
         .header p {
             font-size: 14px;
             font-weight: 400;
             opacity: 0.9;
+            position: relative;
+            z-index: 1;
         }
         
         .map-container {
             position: relative;
-            height: 400px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
-            margin: 15px;
-            border-radius: 24px;
+            height: 450px;
+            background: linear-gradient(135deg, var(--map-area) 0%, #f8f9fa 100%);
+            margin: 0;
+            border-radius: 0;
             overflow-x: auto;
             overflow-y: hidden;
-            width: calc(100% - 30px);
-            box-shadow: 
-                0 20px 60px rgba(0,0,0,0.08),
-                inset 0 1px 0 rgba(255,255,255,0.6),
-                0 0 0 1px rgba(255,255,255,0.3);
-            border: 1px solid rgba(255,255,255,0.5);
             -webkit-overflow-scrolling: touch;
+            border-top: 1px solid var(--medium-gray);
+            border-bottom: 1px solid var(--medium-gray);
         }
         
         .map-content {
             position: relative;
-            width: 700px;
+            width: 720px;
             height: 100%;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
-            backdrop-filter: blur(10px);
+            background: var(--map-area);
         }
         
-        .scroll-hint {
+
+        
+        /* Grid vonalak */
+        .grid-lines {
             position: absolute;
-            top: 15px;
-            right: 20px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-            color: var(--dark-text);
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 700;
-            animation: glow-pulse 3s infinite;
-            box-shadow: 
-                0 8px 32px rgba(0,0,0,0.1),
-                inset 0 1px 0 rgba(255,255,255,0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.6);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            pointer-events: none;
         }
         
-        @keyframes glow-pulse {
-            0%, 100% { 
-                transform: scale(1);
-                box-shadow: 
-                    0 4px 15px rgba(102, 126, 234, 0.4),
-                    inset 0 1px 0 rgba(255,255,255,0.3);
-            }
-            50% { 
-                transform: scale(1.05);
-                box-shadow: 
-                    0 6px 25px rgba(102, 126, 234, 0.6),
-                    inset 0 1px 0 rgba(255,255,255,0.4);
-            }
+        .grid-line {
+            position: absolute;
+            background: var(--medium-gray);
+        }
+        
+        .grid-h {
+            height: 1px;
+            width: 100%;
+        }
+        
+        .grid-v {
+            width: 1px;
+            height: 100%;
+        }
+        
+        .compass {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            width: 48px;
+            height: 48px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+            color: var(--text-primary);
+            box-shadow: 0 2px 8px var(--shadow-medium);
+            z-index: 10;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .compass:hover {
+            transform: scale(1.1);
+        }
+        
+        .compass-needle {
+            position: absolute;
+            width: 2px;
+            height: 16px;
+            background: linear-gradient(to top, var(--primary) 0%, var(--primary) 50%, var(--dark-gray) 50%, var(--dark-gray) 100%);
+            border-radius: 1px;
+            transform-origin: center bottom;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scale {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            background: var(--white);
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            box-shadow: 0 2px 8px var(--shadow-medium);
+            z-index: 10;
         }
         
         .building {
             position: absolute;
-            border-radius: 16px;
+            border-radius: 12px;
             color: var(--white);
-            font-weight: 700;
+            font-weight: 600;
             text-align: center;
             font-size: 11px;
-            padding: 16px 12px;
+            padding: 14px 10px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 
-                0 10px 40px rgba(0,0,0,0.15),
-                inset 0 2px 0 rgba(255,255,255,0.3);
-            border: 1px solid rgba(255,255,255,0.4);
-            backdrop-filter: blur(20px);
+                0 4px 20px var(--shadow-light),
+                0 2px 8px var(--shadow-medium),
+                0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid var(--white);
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            z-index: 5;
         }
         
         .building:hover, .building:active {
-            transform: translateY(-8px) scale(1.05);
+            transform: translateY(-4px) scale(1.03);
             box-shadow: 
-                0 20px 60px rgba(0,0,0,0.4),
-                inset 0 2px 0 rgba(255,255,255,0.4);
+                0 8px 30px var(--shadow-medium),
+                0 4px 12px var(--shadow-heavy),
+                0 12px 40px rgba(0,0,0,0.15);
         }
         
-        /* Szerviz - bal felül */
-        .service-building {
-            width: 90px;
-            height: 70px;
-            background: var(--dark-text);
-            top: 60px;
-            left: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        /* Főépület - középen */
+        /* Főépület - pulsing glow animációval */
         .main-building {
-            width: 120px;
-            height: 80px;
-            background: var(--primary);
-            top: 160px;
-            left: 180px;
+            width: 110px;
+            height: 75px;
+            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 100%);
+            top: 180px;
+            left: 200px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            animation: mainGlow 3s ease-in-out infinite;
         }
         
-        /* Műszaki vizsga - főépület FELETT */
-        .inspection-building {
-            width: 80px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--secondary-text) 0%, #6b7280 50%, #4b5563 100%);
-            box-shadow: 
-                0 10px 30px rgba(134, 141, 152, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2);
+        @keyframes mainGlow {
+            0%, 100% { 
+                box-shadow: 
+                    0 4px 20px var(--shadow-light),
+                    0 2px 8px var(--shadow-medium),
+                    0 8px 25px rgba(0,0,0,0.1),
+                    0 0 0 0 rgba(237, 70, 56, 0);
+            }
+            50% { 
+                box-shadow: 
+                    0 4px 20px var(--shadow-light),
+                    0 2px 8px var(--shadow-medium),
+                    0 8px 25px rgba(0,0,0,0.1),
+                    0 0 0 8px rgba(237, 70, 56, 0.2);
+            }
+        }
+        
+        /* Szerviz */
+        .service-building {
+            width: 85px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--dark-gray) 0%, #202124 100%);
             top: 80px;
-            left: 180px;
+            left: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         
-        /* Haszongépjármű park - még nagyobb méret */
+        /* Műszaki vizsga */
+        .inspection-building {
+            width: 75px;
+            height: 55px;
+            background: linear-gradient(135deg, var(--text-secondary) 0%, #5f6368 100%);
+            top: 100px;
+            left: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Haszongépjármű park */
         .commercial-park {
-            width: 150px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 50%, #b91c1c 100%);
-            box-shadow: 
-                0 10px 30px rgba(237, 70, 56, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2);
-            animation: pulse-glow 4s infinite;
-            top: 150px;
-            left: 450px;
+            width: 140px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 100%);
+            top: 170px;
+            left: 480px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         
-        /* Kapu - lent balra */
+        /* Kapu */
         .gate {
             position: absolute;
-            bottom: 20px;
-            left: 120px;
-            width: 80px;
-            height: 50px;
-            background: var(--secondary-text);
-            border-radius: 16px;
+            bottom: 30px;
+            left: 140px;
+            width: 75px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--text-secondary) 0%, #5f6368 100%);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: var(--white);
-            font-weight: 700;
+            font-weight: 600;
             text-align: center;
             font-size: 10px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 
-                0 8px 32px rgba(0,0,0,0.15),
-                inset 0 2px 0 rgba(255,255,255,0.3);
-            border: 1px solid rgba(255,255,255,0.4);
-            backdrop-filter: blur(20px);
+                0 4px 20px var(--shadow-light),
+                0 2px 8px var(--shadow-medium),
+                0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid var(--white);
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            z-index: 5;
         }
         
         .gate:hover, .gate:active {
-            transform: translateY(-4px) scale(1.05);
+            transform: translateY(-3px) scale(1.03);
             box-shadow: 
-                0 12px 40px rgba(0,0,0,0.4),
-                inset 0 2px 0 rgba(255,255,255,0.4);
+                0 6px 25px var(--shadow-medium),
+                0 3px 10px var(--shadow-heavy),
+                0 12px 35px rgba(0,0,0,0.15);
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.85; }
-        }
-        
-        .you-are-here {
+        .location-pin {
             position: absolute;
-            bottom: 80px;
-            left: 120px;
+            bottom: 85px;
+            left: 140px;
+            width: 32px;
+            height: 32px;
             background: var(--primary);
-            color: var(--white);
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 9px;
-            font-weight: 600;
+            border-radius: 50% 50% 50% 0;
+            transform: rotate(-45deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             animation: bounce 2s infinite;
-            box-shadow: 0 4px 15px rgba(237, 70, 56, 0.3);
+            box-shadow: 0 4px 15px rgba(237, 70, 56, 0.4);
+            z-index: 10;
         }
         
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-6px); }
-            60% { transform: translateY(-3px); }
+        .location-pin::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            background: var(--white);
+            border-radius: 50%;
+            transform: rotate(45deg);
         }
         
         .distance-badge {
             position: absolute;
             background: var(--white);
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
             font-weight: 600;
-            color: var(--dark-text);
-            border: 2px solid var(--primary);
-            box-shadow: 0 2px 8px var(--shadow);
+            color: var(--text-primary);
+            border: 1px solid var(--medium-gray);
+            box-shadow: 0 2px 8px var(--shadow-light);
+            z-index: 6;
         }
         
         .distance-1 {
-            top: 190px;
-            left: 350px;
+            top: 210px;
+            left: 380px;
         }
         
-        .arrow {
+        .direction-arrow {
             position: absolute;
-            font-size: 16px;
+            font-size: 18px;
             color: var(--primary);
             animation: float 2s ease-in-out infinite;
             font-weight: bold;
-            z-index: 5;
+            z-index: 6;
         }
         
         .arrow-1 {
-            top: 200px;
-            left: 390px;
+            top: 215px;
+            left: 420px;
         }
         
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: rotate(-45deg) translateY(0); }
+            40% { transform: rotate(-45deg) translateY(-4px); }
+            60% { transform: rotate(-45deg) translateY(-2px); }
+        }
+        
+        /* Hover kapcsolat vonalak */
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            opacity: 0;
+            transition: all 0.4s ease;
+            pointer-events: none;
+            z-index: 2;
+            border-radius: 1px;
+        }
+        
+        .connection-line.show {
+            opacity: 0.6;
+            animation: lineGrow 0.4s ease;
+        }
+        
+        @keyframes lineGrow {
+            from { width: 0; }
+            to { width: var(--line-width); }
         }
         
         .info-panel {
@@ -300,51 +455,53 @@
             background: var(--white);
         }
         
-        .contact-info {
+        .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 16px;
+            gap: 12px;
             margin-bottom: 24px;
         }
         
-        .contact-item {
+        .contact-card {
             text-align: center;
             padding: 16px 12px;
             background: var(--light-gray);
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            border: 2px solid transparent;
+            border: 1px solid transparent;
         }
         
-        .contact-item:hover {
+        .contact-card:hover {
             border-color: var(--primary);
-            background: #fef7f6;
+            background: #e8f0fe;
+            transform: translateY(-1px);
         }
         
-        .contact-item:active {
+        .contact-card:active {
             transform: scale(0.98);
         }
         
-        .contact-item .icon {
+        .contact-card .icon {
             font-size: 20px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             display: block;
         }
         
-        .contact-item .label {
-            font-size: 12px;
-            color: var(--secondary-text);
+        .contact-card .label {
+            font-size: 11px;
+            color: var(--text-secondary);
             margin-bottom: 4px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         
-        .contact-item .value {
+        .contact-card .value {
             font-size: 12px;
             font-weight: 600;
-            color: var(--dark-text);
-            word-break: break-word;
-            line-height: 1.2;
+            color: var(--text-primary);
+            line-height: 1.3;
         }
         
         .legend {
@@ -353,8 +510,8 @@
         
         .legend h3 {
             font-size: 16px;
-            margin-bottom: 12px;
-            color: var(--dark-text);
+            margin-bottom: 16px;
+            color: var(--text-primary);
             font-weight: 600;
         }
         
@@ -368,78 +525,19 @@
             display: flex;
             align-items: center;
             font-size: 12px;
-            color: var(--secondary-text);
-            padding: 8px;
+            color: var(--text-secondary);
+            padding: 10px;
             background: var(--light-gray);
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 500;
         }
         
-        .legend-color {
+        .legend-dot {
             width: 12px;
             height: 12px;
-            border-radius: 3px;
+            border-radius: 50%;
             margin-right: 8px;
             flex-shrink: 0;
-        }
-        
-        .qr-section {
-            background: var(--primary);
-            color: var(--white);
-            padding: 24px;
-            text-align: center;
-            margin-top: 20px;
-        }
-        
-        .qr-code {
-            width: 150px;
-            height: 150px;
-            margin: 16px auto;
-            background: var(--white);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            color: var(--secondary-text);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-        
-        .btn-generate {
-            background: var(--white);
-            color: var(--primary);
-            border: 2px solid var(--white);
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 12px;
-            transition: all 0.2s ease;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-        }
-        
-        .btn-generate:hover {
-            background: transparent;
-            color: var(--white);
-            border-color: var(--white);
-        }
-        
-        .btn-generate:active {
-            transform: scale(0.98);
-        }
-        
-        .demo-mode {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            background: var(--dark-text);
-            color: var(--white);
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 10px;
-            z-index: 1000;
-            font-weight: 500;
         }
         
         .modal {
@@ -450,28 +548,36 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(32, 33, 36, 0.6);
+            backdrop-filter: blur(4px);
         }
         
         .modal-content {
             background: var(--white);
-            margin: 20% auto;
+            margin: 25% auto;
             padding: 24px;
-            border-radius: 12px;
+            border-radius: 16px;
             width: 90%;
-            max-width: 320px;
+            max-width: 340px;
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 32px var(--shadow-heavy);
+            animation: modalSlide 0.3s ease;
+        }
+        
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .modal-content h3 {
             color: var(--primary);
             font-weight: 600;
             margin-bottom: 12px;
+            font-size: 18px;
         }
         
         .modal-content p {
-            color: var(--secondary-text);
+            color: var(--text-secondary);
             font-size: 14px;
             line-height: 1.5;
         }
@@ -479,10 +585,10 @@
         .close {
             float: right;
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 300;
             cursor: pointer;
             line-height: 1;
-            color: var(--secondary-text);
+            color: var(--text-secondary);
             transition: color 0.2s ease;
         }
         
@@ -495,112 +601,150 @@
             .container {
                 margin: 8px;
                 max-width: none;
+                border-radius: 12px;
             }
             
             .map-container {
-                margin: 16px;
-                height: 350px;
+                height: 380px;
             }
             
             .building {
                 font-size: 10px;
-                padding: 10px 6px;
+                padding: 12px 8px;
             }
             
             .main-building {
-                width: 100px;
-                height: 70px;
+                width: 95px;
+                height: 65px;
             }
             
             .service-building {
-                width: 80px;
-                height: 60px;
+                width: 75px;
+                height: 55px;
             }
             
             .commercial-park {
-                width: 120px;
-                height: 80px;
+                width: 115px;
+                height: 75px;
             }
             
             .inspection-building {
-                width: 70px;
-                height: 50px;
+                width: 65px;
+                height: 45px;
+            }
+            
+            .contact-grid {
+                gap: 8px;
+            }
+            
+            .contact-card {
+                padding: 12px 8px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="demo-mode">DEMO</div>
-    
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>🚗 Autó Dual Térkép</h1>
-            <p>Érintsd meg a területeket a részletekért</p>
+            <h1>🗺️ Autó Dual Térkép</h1>
+            <p>Érintsd meg az épületeket a részletekért</p>
         </div>
         
         <!-- Map -->
         <div class="map-container">
             <div class="map-content">
-                <!-- Kapu - lent balra -->
-                <div class="gate" onclick="showInfo('gate')">
+                <!-- Minimál utak -->
+                <div class="road main-road"></div>
+                <div class="road vertical-road"></div>
+                <div class="road left-road"></div>
+                <div class="road right-road"></div>
+                <!-- Iránytű -->
+                <div class="compass" onclick="requestOrientation()">
+                    <div class="compass-needle" id="compassNeedle"></div>
+                    <div style="position: absolute; top: 2px; font-size: 8px; font-weight: 700;">N</div>
+                </div>
+                <div class="scale">50m</div>
+                
+                <!-- Grid vonalak -->
+                <div class="grid-lines">
+                    <div class="grid-line grid-h" style="top: 25%;"></div>
+                    <div class="grid-line grid-h" style="top: 50%;"></div>
+                    <div class="grid-line grid-h" style="top: 75%;"></div>
+                    <div class="grid-line grid-v" style="left: 25%;"></div>
+                    <div class="grid-line grid-v" style="left: 50%;"></div>
+                    <div class="grid-line grid-v" style="left: 75%;"></div>
+                </div>
+                
+                <!-- Kapu -->
+                <div class="gate" onclick="showInfo('gate')" data-building="gate">
                     <div>🚪 KAPU</div>
                     <div style="font-size: 8px; margin-top: 2px; opacity: 0.8;">Bejárat</div>
                 </div>
                 
-                <!-- Főépület - középen -->
-                <div class="building main-building" onclick="showInfo('main')">
+                <!-- Főépület -->
+                <div class="building main-building" onclick="showInfo('main')" data-building="main">
                     <div>🏢 FŐÉPÜLET</div>
                     <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Értékesítés • Hitel</div>
                 </div>
                 
-                <!-- Szerviz - balra, kapu mellé -->
-                <div class="building service-building" onclick="showInfo('service')">
+                <!-- Szerviz -->
+                <div class="building service-building" onclick="showInfo('service')" data-building="service">
                     <div>🔧 SZERVIZ</div>
                     <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Javítás</div>
                 </div>
                 
-                <!-- Műszaki vizsga - főépület felett -->
-                <div class="building inspection-building" onclick="showInfo('inspection')">
+                <!-- Műszaki vizsga -->
+                <div class="building inspection-building" onclick="showInfo('inspection')" data-building="inspection">
                     <div>📋 MŰSZAKI</div>
                     <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Vizsga</div>
                 </div>
                 
-                <!-- Haszongépjármű park - jobbra -->
-                <div class="building commercial-park" onclick="showInfo('commercial')">
+                <!-- Haszongépjármű park -->
+                <div class="building commercial-park" onclick="showInfo('commercial')" data-building="commercial">
                     <div>🚛 HASZON-</div>
                     <div>GÉPJÁRMŰ</div>
                 </div>
                 
-                <div class="distance-badge distance-1">120m</div>
-                <div class="arrow arrow-1">→</div>
+                <!-- Kapcsolat vonalak -->
+                <div class="connection-line" id="line-main"></div>
+                <div class="connection-line" id="line-service"></div>
+                <div class="connection-line" id="line-inspection"></div>
+                <div class="connection-line" id="line-commercial"></div>
                 
-                <div class="you-are-here">📍 ITT ÁLL ÖN</div>
+                <!-- Távolság és irány -->
+                <div class="distance-badge distance-1">120m</div>
+                <div class="direction-arrow arrow-1">→</div>
+                
+                <!-- Mozgó autó és útvonalak -->
+                <div class="moving-car" id="movingCar">🚗</div>
+                <div class="car-path" id="carPath"></div>
+                <div class="location-pin"></div>
             </div>
         </div>
         
         <!-- Info Panel -->
         <div class="info-panel">
-            <div class="contact-info">
-                <div class="contact-item" onclick="openHours()">
+            <div class="contact-grid">
+                <div class="contact-card" onclick="openHours()">
                     <span class="icon">🕐</span>
                     <div class="label">Nyitva</div>
                     <div class="value">H-P: 9-17</div>
                 </div>
                 
-                <div class="contact-item" onclick="showEmail()">
+                <div class="contact-card" onclick="showEmail()">
                     <span class="icon">✉️</span>
                     <div class="label">Email</div>
                     <div class="value">ugyfelszolgalat@autodual.hu</div>
                 </div>
                 
-                <div class="contact-item" onclick="callPhone()">
+                <div class="contact-card" onclick="callPhone()">
                     <span class="icon">📞</span>
                     <div class="label">Telefon</div>
                     <div class="value">+36 20 804 8666</div>
                 </div>
                 
-                <div class="contact-item" onclick="showAddress()">
+                <div class="contact-card" onclick="showAddress()">
                     <span class="icon">📍</span>
                     <div class="label">Cím</div>
                     <div class="value">Békéscsaba</div>
@@ -608,45 +752,26 @@
             </div>
             
             <div class="legend">
-                <h3>Épületek</h3>
+                <h3>Telephely térképe</h3>
                 <div class="legend-grid">
                     <div class="legend-item">
-                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <div class="legend-dot" style="background: var(--primary);"></div>
                         <span>Főépület</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background: var(--dark-text);"></div>
+                        <div class="legend-dot" style="background: var(--dark-gray);"></div>
                         <span>Szerviz</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background: var(--secondary-text);"></div>
+                        <div class="legend-dot" style="background: var(--text-secondary);"></div>
                         <span>Műszaki vizsga</span>
                     </div>
                     <div class="legend-item">
-                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <div class="legend-dot" style="background: var(--primary);"></div>
                         <span>Haszongépjármű</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    
-    <!-- QR Code Section -->
-    <div class="container" style="margin-top: 20px;">
-        <div class="qr-section">
-            <h2 style="margin-bottom: 8px; font-size: 18px; font-weight: 600;">📱 QR-kód Generálás</h2>
-            <p style="font-size: 12px; margin-bottom: 16px; opacity: 0.9;">Nyomtasd ki és helyezd el a bejáratnál</p>
-            
-            <div class="qr-code" id="qrcode">
-                <div style="text-align: center;">
-                    <div style="font-size: 11px; color: var(--secondary-text); margin-bottom: 6px;">QR-kód itt lesz</div>
-                    <div style="font-size: 9px; color: var(--secondary-text);">Kattints a gombra ↓</div>
-                </div>
-            </div>
-            
-            <button class="btn-generate" onclick="generateQR()">
-                QR-kód Generálás
-            </button>
         </div>
     </div>
     
@@ -682,6 +807,141 @@
             }
         };
         
+        let currentOrientation = 0;
+        let orientationSupported = false;
+        
+        // Élő iránytű funkciók
+        function requestOrientation() {
+            if ('DeviceOrientationEvent' in window) {
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    // iOS 13+ permission request
+                    DeviceOrientationEvent.requestPermission()
+                        .then(permissionState => {
+                            if (permissionState === 'granted') {
+                                enableCompass();
+                            } else {
+                                fallbackCompass();
+                            }
+                        })
+                        .catch(() => fallbackCompass());
+                } else {
+                    // Android vagy régebbi iOS
+                    enableCompass();
+                }
+            } else {
+                fallbackCompass();
+            }
+        }
+        
+        function enableCompass() {
+            orientationSupported = true;
+            window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+            window.addEventListener('deviceorientation', handleOrientation, true);
+            
+            // Feedback
+            document.querySelector('.compass').style.borderColor = 'var(--secondary)';
+            setTimeout(() => {
+                document.querySelector('.compass').style.borderColor = 'transparent';
+            }, 1000);
+        }
+        
+        function handleOrientation(event) {
+            if (orientationSupported) {
+                let heading = event.alpha || event.webkitCompassHeading || 0;
+                if (event.webkitCompassHeading) {
+                    heading = 360 - heading; // iOS correction
+                }
+                updateCompass(heading);
+            }
+        }
+        
+        function updateCompass(heading) {
+            const needle = document.getElementById('compassNeedle');
+            if (needle) {
+                needle.style.transform = `rotate(${heading}deg)`;
+                currentOrientation = heading;
+            }
+        }
+        
+        function fallbackCompass() {
+            // Fallback animáció ha nincs gyroscope
+            const needle = document.getElementById('compassNeedle');
+            let angle = 0;
+            setInterval(() => {
+                angle += 2;
+                if (angle >= 360) angle = 0;
+                needle.style.transform = `rotate(${angle}deg)`;
+            }, 100);
+        }
+        
+        // Mozgó autó funkciók
+        const carRoutes = {
+            'gate-main': {
+                start: { x: 180, y: 380 },
+                end: { x: 255, y: 220 },
+                duration: 2000
+            },
+            'gate-service': {
+                start: { x: 180, y: 380 },
+                end: { x: 65, y: 115 },
+                duration: 2500
+            },
+            'gate-inspection': {
+                start: { x: 180, y: 380 },
+                end: { x: 235, y: 130 },
+                duration: 2200
+            },
+            'gate-commercial': {
+                start: { x: 180, y: 380 },
+                end: { x: 550, y: 215 },
+                duration: 3000
+            }
+        };
+        
+        function moveCarTo(destination) {
+            const car = document.getElementById('movingCar');
+            const path = document.getElementById('carPath');
+            const route = carRoutes[`gate-${destination}`];
+            
+            if (!route || !car) return;
+            
+            // Setup útvonal vizualizáció
+            const distance = Math.sqrt(
+                Math.pow(route.end.x - route.start.x, 2) + 
+                Math.pow(route.end.y - route.start.y, 2)
+            );
+            const angle = Math.atan2(
+                route.end.y - route.start.y, 
+                route.end.x - route.start.x
+            ) * 180 / Math.PI;
+            
+            path.style.left = route.start.x + 'px';
+            path.style.top = route.start.y + 'px';
+            path.style.width = distance + 'px';
+            path.style.transform = `rotate(${angle}deg)`;
+            path.style.transformOrigin = '0 50%';
+            path.classList.add('active');
+            
+            // Autó pozíció és animáció
+            car.style.left = route.start.x + 'px';
+            car.style.top = route.start.y + 'px';
+            car.style.transform = `rotate(${angle + 90}deg)`;
+            
+            // Mozgás animáció
+            setTimeout(() => {
+                car.style.left = route.end.x + 'px';
+                car.style.top = route.end.y + 'px';
+            }, 100);
+            
+            // Cleanup
+            setTimeout(() => {
+                path.classList.remove('active');
+                car.style.left = route.start.x + 'px';
+                car.style.top = route.start.y + 'px';
+                car.style.transform = 'rotate(90deg)';
+            }, route.duration + 500);
+        }
+        
         function showInfo(building) {
             const modal = document.getElementById('infoModal');
             const content = document.getElementById('modalContent');
@@ -693,6 +953,11 @@
             `;
             
             modal.style.display = 'block';
+            
+            // Trigger car animation
+            if (building !== 'gate') {
+                moveCarTo(building);
+            }
         }
         
         function closeModal() {
@@ -719,20 +984,6 @@
             alert('Cím: Békéscsaba\n\nNavigáció indítása?');
         }
         
-        function generateQR() {
-            const qrDiv = document.getElementById('qrcode');
-            qrDiv.innerHTML = `
-                <div style="width: 100%; height: 100%; background: #333; color: white; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: 600;">
-                    QR KÓDOD<br>
-                    <small style="font-size: 8px;">demo verzió</small>
-                </div>
-            `;
-            
-            setTimeout(() => {
-                alert('✅ QR-kód sikeresen generálva!\n\n📱 Most kinyomtathatod és kiteheted a bejárathoz.\n\n🎯 A QR-kód beolvasása megnyitja ezt a térképet a látogatók telefonján.');
-            }, 500);
-        }
-        
         // Modal bezárás kattintásra
         window.onclick = function(event) {
             const modal = document.getElementById('infoModal');
@@ -744,10 +995,23 @@
         // Touch optimalizálás
         document.addEventListener('DOMContentLoaded', function() {
             const buildings = document.querySelectorAll('.building, .gate');
-            const contactItems = document.querySelectorAll('.contact-item');
+            const contactItems = document.querySelectorAll('.contact-card');
             
-            // Building és gate click events
+            // Hover connection lines
+            const gateRect = document.querySelector('.gate').getBoundingClientRect();
+            const mapRect = document.querySelector('.map-content').getBoundingClientRect();
+            
             buildings.forEach(element => {
+                // Connection line setup
+                const buildingType = element.getAttribute('data-building');
+                if (buildingType && buildingType !== 'gate') {
+                    const line = document.getElementById(`line-${buildingType}`);
+                    if (line) {
+                        setupConnectionLine(element, line);
+                    }
+                }
+                
+                // Click events
                 element.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const buildingType = this.getAttribute('onclick');
@@ -761,8 +1025,8 @@
                 
                 element.addEventListener('touchstart', function(e) {
                     e.preventDefault();
-                    this.style.opacity = '0.8';
-                    this.style.transform = 'scale(0.95)';
+                    this.style.opacity = '0.9';
+                    this.style.transform = 'scale(0.97)';
                 }, { passive: false });
                 
                 element.addEventListener('touchend', function(e) {
@@ -771,7 +1035,6 @@
                     this.style.opacity = '1';
                     this.style.transform = 'scale(1)';
                     
-                    // Trigger the appropriate function
                     const buildingType = this.getAttribute('onclick');
                     if (buildingType) {
                         const match = buildingType.match(/showInfo\('(.+?)'\)/);
@@ -781,6 +1044,36 @@
                     }
                 }, { passive: false });
             });
+            
+            function setupConnectionLine(building, line) {
+                const gate = document.querySelector('.gate');
+                
+                building.addEventListener('mouseenter', function() {
+                    const buildingRect = building.getBoundingClientRect();
+                    const gateRect = gate.getBoundingClientRect();
+                    const mapRect = document.querySelector('.map-content').getBoundingClientRect();
+                    
+                    // Calculate relative positions within map
+                    const gateX = gateRect.left - mapRect.left + gateRect.width;
+                    const gateY = gateRect.top - mapRect.top + gateRect.height / 2;
+                    const buildingX = buildingRect.left - mapRect.left;
+                    const buildingY = buildingRect.top - mapRect.top + buildingRect.height / 2;
+                    
+                    const distance = Math.sqrt(Math.pow(buildingX - gateX, 2) + Math.pow(buildingY - gateY, 2));
+                    const angle = Math.atan2(buildingY - gateY, buildingX - gateX) * 180 / Math.PI;
+                    
+                    line.style.left = gateX + 'px';
+                    line.style.top = gateY + 'px';
+                    line.style.width = distance + 'px';
+                    line.style.transform = `rotate(${angle}deg)`;
+                    line.style.transformOrigin = '0 50%';
+                    line.classList.add('show');
+                });
+                
+                building.addEventListener('mouseleave', function() {
+                    line.classList.remove('show');
+                });
+            }
             
             // Contact items
             contactItems.forEach(element => {
