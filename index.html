@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autókereskedés Térkép</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #ED4638;
+            --white: #FFFFFF;
+            --light-gray: #F3F4F6;
+            --dark-text: #333333;
+            --secondary-text: #868D98;
+            --shadow: rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--light-gray);
+            min-height: 100vh;
+            padding: 16px;
+            color: var(--dark-text);
+        }
+        
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .header {
+            background: var(--primary);
+            padding: 24px 20px;
+            text-align: center;
+            color: var(--white);
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .map-container {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            margin: 15px;
+            border-radius: 24px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            width: calc(100% - 30px);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.08),
+                inset 0 1px 0 rgba(255,255,255,0.6),
+                0 0 0 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.5);
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .map-content {
+            position: relative;
+            width: 700px;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            backdrop-filter: blur(10px);
+        }
+        
+        .scroll-hint {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
+            color: var(--dark-text);
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 700;
+            animation: glow-pulse 3s infinite;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.6);
+        }
+        
+        @keyframes glow-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 4px 15px rgba(102, 126, 234, 0.4),
+                    inset 0 1px 0 rgba(255,255,255,0.3);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 
+                    0 6px 25px rgba(102, 126, 234, 0.6),
+                    inset 0 1px 0 rgba(255,255,255,0.4);
+            }
+        }
+        
+        .building {
+            position: absolute;
+            border-radius: 16px;
+            color: var(--white);
+            font-weight: 700;
+            text-align: center;
+            font-size: 11px;
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.15),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(20px);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        .building:hover, .building:active {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+        
+        /* Szerviz - bal felül */
+        .service-building {
+            width: 90px;
+            height: 70px;
+            background: var(--dark-text);
+            top: 60px;
+            left: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Főépület - középen */
+        .main-building {
+            width: 120px;
+            height: 80px;
+            background: var(--primary);
+            top: 160px;
+            left: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Műszaki vizsga - főépület FELETT */
+        .inspection-building {
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary-text) 0%, #6b7280 50%, #4b5563 100%);
+            box-shadow: 
+                0 10px 30px rgba(134, 141, 152, 0.35),
+                inset 0 2px 0 rgba(255,255,255,0.2);
+            top: 80px;
+            left: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Haszongépjármű park - még nagyobb méret */
+        .commercial-park {
+            width: 150px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 50%, #b91c1c 100%);
+            box-shadow: 
+                0 10px 30px rgba(237, 70, 56, 0.35),
+                inset 0 2px 0 rgba(255,255,255,0.2);
+            animation: pulse-glow 4s infinite;
+            top: 150px;
+            left: 450px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        /* Kapu - lent balra */
+        .gate {
+            position: absolute;
+            bottom: 20px;
+            left: 120px;
+            width: 80px;
+            height: 50px;
+            background: var(--secondary-text);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-weight: 700;
+            text-align: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.15),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(20px);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        .gate:hover, .gate:active {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        
+        .you-are-here {
+            position: absolute;
+            bottom: 80px;
+            left: 120px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 9px;
+            font-weight: 600;
+            animation: bounce 2s infinite;
+            box-shadow: 0 4px 15px rgba(237, 70, 56, 0.3);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            60% { transform: translateY(-3px); }
+        }
+        
+        .distance-badge {
+            position: absolute;
+            background: var(--white);
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--dark-text);
+            border: 2px solid var(--primary);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .distance-1 {
+            top: 190px;
+            left: 350px;
+        }
+        
+        .arrow {
+            position: absolute;
+            font-size: 16px;
+            color: var(--primary);
+            animation: float 2s ease-in-out infinite;
+            font-weight: bold;
+            z-index: 5;
+        }
+        
+        .arrow-1 {
+            top: 200px;
+            left: 390px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        .info-panel {
+            padding: 24px;
+            background: var(--white);
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .contact-item {
+            text-align: center;
+            padding: 16px 12px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .contact-item:hover {
+            border-color: var(--primary);
+            background: #fef7f6;
+        }
+        
+        .contact-item:active {
+            transform: scale(0.98);
+        }
+        
+        .contact-item .icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .contact-item .label {
+            font-size: 12px;
+            color: var(--secondary-text);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .contact-item .value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-text);
+            word-break: break-word;
+            line-height: 1.2;
+        }
+        
+        .legend {
+            margin-top: 24px;
+        }
+        
+        .legend h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--dark-text);
+            font-weight: 600;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--secondary-text);
+            padding: 8px;
+            background: var(--light-gray);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .qr-section {
+            background: var(--primary);
+            color: var(--white);
+            padding: 24px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 16px auto;
+            background: var(--white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: var(--secondary-text);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .btn-generate {
+            background: var(--white);
+            color: var(--primary);
+            border: 2px solid var(--white);
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+        }
+        
+        .btn-generate:hover {
+            background: transparent;
+            color: var(--white);
+            border-color: var(--white);
+        }
+        
+        .btn-generate:active {
+            transform: scale(0.98);
+        }
+        
+        .demo-mode {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: var(--dark-text);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 10px;
+            z-index: 1000;
+            font-weight: 500;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background: var(--white);
+            margin: 20% auto;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        
+        .modal-content h3 {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .modal-content p {
+            color: var(--secondary-text);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .close {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            color: var(--secondary-text);
+            transition: color 0.2s ease;
+        }
+        
+        .close:hover {
+            color: var(--primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                margin: 8px;
+                max-width: none;
+            }
+            
+            .map-container {
+                margin: 16px;
+                height: 350px;
+            }
+            
+            .building {
+                font-size: 10px;
+                padding: 10px 6px;
+            }
+            
+            .main-building {
+                width: 100px;
+                height: 70px;
+            }
+            
+            .service-building {
+                width: 80px;
+                height: 60px;
+            }
+            
+            .commercial-park {
+                width: 120px;
+                height: 80px;
+            }
+            
+            .inspection-building {
+                width: 70px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-mode">DEMO</div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚗 Autó Dual Térkép</h1>
+            <p>Érintsd meg a területeket a részletekért</p>
+        </div>
+        
+        <!-- Map -->
+        <div class="map-container">
+            <div class="map-content">
+                <!-- Kapu - lent balra -->
+                <div class="gate" onclick="showInfo('gate')">
+                    <div>🚪 KAPU</div>
+                    <div style="font-size: 8px; margin-top: 2px; opacity: 0.8;">Bejárat</div>
+                </div>
+                
+                <!-- Főépület - középen -->
+                <div class="building main-building" onclick="showInfo('main')">
+                    <div>🏢 FŐÉPÜLET</div>
+                    <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Értékesítés • Hitel</div>
+                </div>
+                
+                <!-- Szerviz - balra, kapu mellé -->
+                <div class="building service-building" onclick="showInfo('service')">
+                    <div>🔧 SZERVIZ</div>
+                    <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Javítás</div>
+                </div>
+                
+                <!-- Műszaki vizsga - főépület felett -->
+                <div class="building inspection-building" onclick="showInfo('inspection')">
+                    <div>📋 MŰSZAKI</div>
+                    <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Vizsga</div>
+                </div>
+                
+                <!-- Haszongépjármű park - jobbra -->
+                <div class="building commercial-park" onclick="showInfo('commercial')">
+                    <div>🚛 HASZON-</div>
+                    <div>GÉPJÁRMŰ</div>
+                </div>
+                
+                <div class="distance-badge distance-1">120m</div>
+                <div class="arrow arrow-1">→</div>
+                
+                <div class="you-are-here">📍 ITT ÁLL ÖN</div>
+            </div>
+        </div>
+        
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="contact-info">
+                <div class="contact-item" onclick="openHours()">
+                    <span class="icon">🕐</span>
+                    <div class="label">Nyitva</div>
+                    <div class="value">H-P: 9-17</div>
+                </div>
+                
+                <div class="contact-item" onclick="showEmail()">
+                    <span class="icon">✉️</span>
+                    <div class="label">Email</div>
+                    <div class="value">ugyfelszolgalat@autodual.hu</div>
+                </div>
+                
+                <div class="contact-item" onclick="callPhone()">
+                    <span class="icon">📞</span>
+                    <div class="label">Telefon</div>
+                    <div class="value">+36 20 804 8666</div>
+                </div>
+                
+                <div class="contact-item" onclick="showAddress()">
+                    <span class="icon">📍</span>
+                    <div class="label">Cím</div>
+                    <div class="value">Békéscsaba</div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h3>Épületek</h3>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <span>Főépület</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--dark-text);"></div>
+                        <span>Szerviz</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--secondary-text);"></div>
+                        <span>Műszaki vizsga</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <span>Haszongépjármű</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- QR Code Section -->
+    <div class="container" style="margin-top: 20px;">
+        <div class="qr-section">
+            <h2 style="margin-bottom: 8px; font-size: 18px; font-weight: 600;">📱 QR-kód Generálás</h2>
+            <p style="font-size: 12px; margin-bottom: 16px; opacity: 0.9;">Nyomtasd ki és helyezd el a bejáratnál</p>
+            
+            <div class="qr-code" id="qrcode">
+                <div style="text-align: center;">
+                    <div style="font-size: 11px; color: var(--secondary-text); margin-bottom: 6px;">QR-kód itt lesz</div>
+                    <div style="font-size: 9px; color: var(--secondary-text);">Kattints a gombra ↓</div>
+                </div>
+            </div>
+            
+            <button class="btn-generate" onclick="generateQR()">
+                QR-kód Generálás
+            </button>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        const buildingInfo = {
+            gate: {
+                title: "🚪 Bejárat",
+                content: "Főbejárat a telephelyre.<br><br>🚗 Parkolás a kapu után<br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!"
+            },
+            main: {
+                title: "🏢 Főépület",
+                content: "Itt találhatók az értékesítők és hitelügyintézők.<br><br>📞 Telefon: +36 20 804 8666<br>🕐 Nyitva: H-P 9:00-17:00<br><br>💡 <strong>Minden információ itt!</strong>"
+            },
+            service: {
+                title: "🔧 Szerviz",
+                content: "Professzionális autójavítás és karbantartás.<br><br>📞 Szerviz: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>⚙️ Teljes körű szerviz szolgáltatás"
+            },
+            inspection: {
+                title: "📋 Műszaki Vizsga",
+                content: "Műszaki vizsgáztatás.<br><br>📞 Műszaki: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>📄 Gyors ügyintézés"
+            },
+            commercial: {
+                title: "🚛 Haszongépjármű Park",
+                content: "Kisteherautók, furgonok és haszongépjárművek.<br><br>📍 120 méter a főépülettől lefelé"
+            }
+        };
+        
+        function showInfo(building) {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('modalContent');
+            const info = buildingInfo[building];
+            
+            content.innerHTML = `
+                <h3 style="margin-bottom: 15px;">${info.title}</h3>
+                <p>${info.content}</p>
+            `;
+            
+            modal.style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+        
+        function callPhone() {
+            if (confirm('Hívás indítása: +36 20 804 8666?')) {
+                window.location.href = 'tel:+36208048666';
+            }
+        }
+        
+        function showEmail() {
+            if (confirm('Email küldése: ugyfelszolgalat@autodual.hu?')) {
+                window.location.href = 'mailto:ugyfelszolgalat@autodual.hu';
+            }
+        }
+        
+        function openHours() {
+            alert('Nyitvatartás:\n\n🏢 Főépület: H-P 9:00-17:00\n🔧 Szerviz: H-P 8:00-16:30\n📋 Műszaki: H-P 8:00-16:30\n\nSzombat-Vasárnap: Zárva');
+        }
+        
+        function showAddress() {
+            alert('Cím: Békéscsaba\n\nNavigáció indítása?');
+        }
+        
+        function generateQR() {
+            const qrDiv = document.getElementById('qrcode');
+            qrDiv.innerHTML = `
+                <div style="width: 100%; height: 100%; background: #333; color: white; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-weight: 600;">
+                    QR KÓDOD<br>
+                    <small style="font-size: 8px;">demo verzió</small>
+                </div>
+            `;
+            
+            setTimeout(() => {
+                alert('✅ QR-kód sikeresen generálva!\n\n📱 Most kinyomtathatod és kiteheted a bejárathoz.\n\n🎯 A QR-kód beolvasása megnyitja ezt a térképet a látogatók telefonján.');
+            }, 500);
+        }
+        
+        // Modal bezárás kattintásra
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Touch optimalizálás
+        document.addEventListener('DOMContentLoaded', function() {
+            const buildings = document.querySelectorAll('.building, .gate');
+            const contactItems = document.querySelectorAll('.contact-item');
+            
+            // Building és gate click events
+            buildings.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const buildingType = this.getAttribute('onclick');
+                    if (buildingType) {
+                        const match = buildingType.match(/showInfo\('(.+?)'\)/);
+                        if (match) {
+                            showInfo(match[1]);
+                        }
+                    }
+                });
+                
+                element.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '0.8';
+                    this.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                element.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
+                    
+                    // Trigger the appropriate function
+                    const buildingType = this.getAttribute('onclick');
+                    if (buildingType) {
+                        const match = buildingType.match(/showInfo\('(.+?)'\)/);
+                        if (match) {
+                            showInfo(match[1]);
+                        }
+                    }
+                }, { passive: false });
+            });
+            
+            // Contact items
+            contactItems.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.8';
+                });
+                element.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
