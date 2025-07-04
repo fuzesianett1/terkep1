@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="hu">
 <head>
@@ -140,38 +139,70 @@
                 inset 0 2px 0 rgba(255,255,255,0.4);
         }
         
-        /* Képek stílusai */
-        .building-image {
+        /* Képes épületek speciális stílusai */
+        .building.has-image {
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            box-shadow: none;
+            border: none;
+            backdrop-filter: none;
+        }
+        
+        .building.has-image:hover, .building.has-image:active {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: none;
+        }
+        
+        .building.has-image .building-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 16px;
+            height: 70%;
+            object-fit: contain;
+            background: transparent;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
-        .building-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 0 0 16px 16px;
+        .building.has-image .building-text {
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
+            background: transparent;
+            color: var(--dark-text);
+            padding: 8px 0;
+            border-radius: 0;
             font-size: 10px;
             font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            text-align: center;
+            box-shadow: none;
         }
         
-        .building-title {
+        .building.has-image .building-title {
             font-size: 11px;
             font-weight: 700;
             margin-bottom: 2px;
+            color: var(--dark-text);
         }
         
-        .building-subtitle {
+        .building.has-image .building-subtitle {
+            font-size: 9px;
+            opacity: 0.8;
+            color: var(--secondary-text);
+        }
+        
+        /* Eredeti épületek stílusai */
+        .building:not(.has-image) .building-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            color: var(--white);
+        }
+        
+        .building:not(.has-image) .building-subtitle {
             font-size: 9px;
             opacity: 0.9;
+            color: var(--white);
         }
         
         /* Szerviz - bal felül */
@@ -186,8 +217,8 @@
         /* Főépület - középen */
         .main-building {
             width: 120px;
-            height: 80px;
-            background: var(--primary);
+            height: 90px;
+            background: transparent;
             top: 160px;
             left: 180px;
         }
@@ -204,31 +235,10 @@
         /* Haszongépjármű park - még nagyobb méret */
         .commercial-park {
             width: 150px;
-            height: 100px;
-            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 50%, #b91c1c 100%);
+            height: 110px;
+            background: transparent;
             top: 150px;
             left: 450px;
-        }
-        
-        .commercial-park.pulse-glow {
-            animation: pulse-glow 4s infinite;
-        }
-        
-        .pulse-glow {
-            animation: pulse-glow 4s infinite;
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 
-                    0 10px 30px rgba(237, 70, 56, 0.35),
-                    inset 0 2px 0 rgba(255,255,255,0.2);
-            }
-            50% {
-                box-shadow: 
-                    0 15px 45px rgba(237, 70, 56, 0.5),
-                    inset 0 2px 0 rgba(255,255,255,0.3);
-            }
         }
         
         /* Kapu - lent balra */
@@ -553,7 +563,7 @@
                 font-size: 10px;
             }
             
-            .building-overlay {
+            .building-text {
                 padding: 6px 8px;
             }
             
@@ -567,7 +577,7 @@
             
             .main-building {
                 width: 100px;
-                height: 70px;
+                height: 80px;
             }
             
             .service-building {
@@ -577,7 +587,7 @@
             
             .commercial-park {
                 width: 120px;
-                height: 80px;
+                height: 90px;
             }
             
             .inspection-building {
@@ -616,48 +626,39 @@
             <div class="map-content">
                 <!-- Kapu - lent balra -->
                 <div class="gate" onclick="showInfo('gate')">
-                    <img src="gate.jpg" alt="Kapu" class="building-image" style="display: none;" onerror="this.style.display='none'">
-                    <div class="building-overlay">
-                        <div class="building-title">🚪 KAPU</div>
-                        <div class="building-subtitle">Bejárat</div>
-                    </div>
+                    <div class="building-title">🚪 KAPU</div>
+                    <div class="building-subtitle">Bejárat</div>
                 </div>
                 
                 <!-- Főépület - középen -->
-<div class="building main-building" onclick="showInfo('main')">
-    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/1.png" alt="Főépület" class="building-image" style="display: block;" onerror="this.style.display='none'; this.parentElement.classList.add('no-image');">
-    <div class="building-overlay">
-        <div class="building-title">🏢 FŐÉPÜLET</div>
-        <div class="building-subtitle">Értékesítés • Hitel</div>
-    </div>
-</div>
+                <div class="building main-building has-image" onclick="showInfo('main')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/1.png" alt="Főépület" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">🏢 FŐÉPÜLET</div>
+                        <div class="building-subtitle">Értékesítés • Hitel</div>
+                    </div>
+                </div>
                 
                 <!-- Szerviz - balra -->
                 <div class="building service-building" onclick="showInfo('service')">
-                    <img src="service-building.jpg" alt="Szerviz" class="building-image" style="display: none;" onerror="this.style.display='none'">
-                    <div class="building-overlay">
-                        <div class="building-title">🔧 SZERVIZ</div>
-                        <div class="building-subtitle">Javítás</div>
-                    </div>
+                    <div class="building-title">🔧 SZERVIZ</div>
+                    <div class="building-subtitle">Javítás</div>
                 </div>
                 
                 <!-- Műszaki vizsga - főépület felett -->
                 <div class="building inspection-building" onclick="showInfo('inspection')">
-                    <img src="inspection-building.jpg" alt="Műszaki vizsga" class="building-image" style="display: none;" onerror="this.style.display='none'">
-                    <div class="building-overlay">
-                        <div class="building-title">📋 MŰSZAKI</div>
-                        <div class="building-subtitle">Vizsga</div>
-                    </div>
+                    <div class="building-title">📋 MŰSZAKI</div>
+                    <div class="building-subtitle">Vizsga</div>
                 </div>
                 
                 <!-- Haszongépjármű park - jobbra -->
-<div class="building commercial-park pulse-glow" onclick="showInfo('commercial')">
-    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/2.png" alt="Haszongépjármű park" class="building-image" style="display: block;" onerror="this.style.display='none'; this.parentElement.classList.add('no-image');">
-    <div class="building-overlay">
-        <div class="building-title">🚛 HASZON-</div>
-        <div class="building-subtitle">GÉPJÁRMŰ</div>
-    </div>
-</div>
+                <div class="building commercial-park has-image" onclick="showInfo('commercial')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/2.png" alt="Haszongépjármű park" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">🚛 HASZON-</div>
+                        <div class="building-subtitle">GÉPJÁRMŰ</div>
+                    </div>
+                </div>
                 
                 <div class="distance-badge distance-1">120m</div>
                 <div class="arrow arrow-1">→</div>
@@ -867,55 +868,12 @@
             }
         }
         
-        // Képek betöltése és fallback kezelés
+        // Touch optimalizálás
         document.addEventListener('DOMContentLoaded', function() {
             const buildings = document.querySelectorAll('.building, .gate');
             
             buildings.forEach(building => {
-                const img = building.querySelector('.building-image');
-                const overlay = building.querySelector('.building-overlay');
-                
-                if (img) {
-                    // Próbáljuk betölteni a képet
-                    img.onload = function() {
-                        this.style.display = 'block';
-                        building.style.padding = '0';
-                    };
-                    
-                    img.onerror = function() {
-                        // Ha a kép nem töltődik be, használjuk a fallback dizájnt
-                        this.style.display = 'none';
-                        building.classList.add('no-image');
-                        building.style.padding = '16px 12px';
-                        building.style.display = 'flex';
-                        building.style.flexDirection = 'column';
-                        building.style.justifyContent = 'center';
-                        building.style.alignItems = 'center';
-                        
-                        // Overlay tartalmát közvetlenül a buildingbe tesszük
-                        if (overlay) {
-                            const title = overlay.querySelector('.building-title');
-                            const subtitle = overlay.querySelector('.building-subtitle');
-                            
-                            building.innerHTML = `
-                                <div style="font-size: 11px; font-weight: 700; margin-bottom: 3px;">
-                                    ${title ? title.textContent : ''}
-                                </div>
-                                <div style="font-size: 9px; opacity: 0.9;">
-                                    ${subtitle ? subtitle.textContent : ''}
-                                </div>
-                            `;
-                        }
-                    };
-                    
-                    // Indítjuk a betöltést
-                    img.src = img.src;
-                }
-            });
-            
-            // Touch optimalizálás
-            buildings.forEach(element => {
-                element.addEventListener('click', function(e) {
+                building.addEventListener('click', function(e) {
                     e.stopPropagation();
                     const buildingType = this.getAttribute('onclick');
                     if (buildingType) {
@@ -926,13 +884,13 @@
                     }
                 });
                 
-                element.addEventListener('touchstart', function(e) {
+                building.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     this.style.opacity = '0.8';
                     this.style.transform = 'scale(0.95)';
                 }, { passive: false });
                 
-                element.addEventListener('touchend', function(e) {
+                building.addEventListener('touchend', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     this.style.opacity = '1';
