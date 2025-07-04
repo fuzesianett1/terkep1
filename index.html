@@ -176,6 +176,7 @@
             font-weight: 600;
             text-align: center;
             box-shadow: none;
+            line-height: 1.1;
         }
         
         .building.has-image .building-title {
@@ -183,12 +184,14 @@
             font-weight: 700;
             margin-bottom: 2px;
             color: var(--dark-text);
+            line-height: 1.1;
         }
         
         .building.has-image .building-subtitle {
             font-size: 9px;
             opacity: 0.8;
             color: var(--secondary-text);
+            line-height: 1.1;
         }
         
         /* Eredeti épületek stílusai */
@@ -587,7 +590,15 @@
             
             .commercial-park {
                 width: 120px;
-                height: 90px;
+                height: 100px;
+            }
+            
+            .commercial-park .building-title {
+                font-size: 10px;
+            }
+            
+            .commercial-park .building-subtitle {
+                font-size: 8px;
             }
             
             .inspection-building {
@@ -868,22 +879,29 @@
             }
         }
         
-        // Touch optimalizálás
+        // Touch optimalizálás és automatikus felugró javítás
         document.addEventListener('DOMContentLoaded', function() {
             const buildings = document.querySelectorAll('.building, .gate');
             
             buildings.forEach(building => {
+                // Eltávolítjuk az onclick attribútumot hogy ne fusson automatikusan
+                const onclickValue = building.getAttribute('onclick');
+                building.removeAttribute('onclick');
+                
+                // Csak kattintásra működjön
                 building.addEventListener('click', function(e) {
+                    e.preventDefault();
                     e.stopPropagation();
-                    const buildingType = this.getAttribute('onclick');
-                    if (buildingType) {
-                        const match = buildingType.match(/showInfo\('(.+?)'\)/);
+                    
+                    if (onclickValue) {
+                        const match = onclickValue.match(/showInfo\('(.+?)'\)/);
                         if (match) {
                             showInfo(match[1]);
                         }
                     }
                 });
                 
+                // Touch események
                 building.addEventListener('touchstart', function(e) {
                     e.preventDefault();
                     this.style.opacity = '0.8';
@@ -897,13 +915,18 @@
                     this.style.transform = 'scale(1)';
                     
                     // Trigger the appropriate function
-                    const buildingType = this.getAttribute('onclick');
-                    if (buildingType) {
-                        const match = buildingType.match(/showInfo\('(.+?)'\)/);
+                    if (onclickValue) {
+                        const match = onclickValue.match(/showInfo\('(.+?)'\)/);
                         if (match) {
                             showInfo(match[1]);
                         }
                     }
+                }, { passive: false });
+                
+                // Touchcancel esemény
+                building.addEventListener('touchcancel', function(e) {
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
                 }, { passive: false });
             });
             
