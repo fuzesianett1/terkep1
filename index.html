@@ -651,20 +651,26 @@
                 </div>
                 
                 <!-- Szerviz - balra -->
-                <div class="building service-building" onclick="showInfo('service')">
-                    <div class="building-title">🔧 SZERVIZ</div>
-                    <div class="building-subtitle">Javítás</div>
+                <div class="building service-building has-image" onclick="showInfo('service')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/3.png" alt="Szerviz" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">🔧 SZERVIZ</div>
+                        <div class="building-subtitle">Javítás</div>
+                    </div>
                 </div>
                 
-                <!-- Műszaki vizsga - főépület felett -->
-                <div class="building inspection-building" onclick="showInfo('inspection')">
-                    <div class="building-title">📋 MŰSZAKI</div>
-                    <div class="building-subtitle">Vizsga</div>
+                <!-- Eredetiségvizsgálat - főépület felett -->
+                <div class="building inspection-building has-image" onclick="showInfo('inspection')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/5.png" alt="Eredetiségvizsgálat" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">📋 EREDETISÉG-</div>
+                        <div class="building-subtitle">VIZSGÁLAT</div>
+                    </div>
                 </div>
                 
                 <!-- Haszongépjármű park - jobbra -->
                 <div class="building commercial-park has-image" onclick="showInfo('commercial')">
-                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/2.png" alt="Haszongépjármű park" class="building-image">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/4.png" alt="Haszongépjármű park" class="building-image">
                     <div class="building-text">
                         <div class="building-title">🚛 HASZON-</div>
                         <div class="building-subtitle">GÉPJÁRMŰ</div>
@@ -721,7 +727,7 @@
                     </div>
                     <div class="legend-item">
                         <div class="legend-color" style="background: var(--secondary-text);"></div>
-                        <span>Műszaki vizsga</span>
+                        <span>Eredetiségvizsgálat</span>
                     </div>
                     <div class="legend-item">
                         <div class="legend-color" style="background: var(--primary);"></div>
@@ -746,7 +752,7 @@
                 
                 <div class="action-item" onclick="requestInspection()">
                     <div class="action-icon">📋</div>
-                    <div class="action-title">Műszaki Időpont</div>
+                    <div class="action-title">Eredetiségvizsgálat</div>
                     <div class="action-subtitle">Gyors ügyintézés</div>
                 </div>
                 
@@ -777,7 +783,7 @@
         const buildingInfo = {
             gate: {
                 title: "🚪 Bejárat",
-                content: "Főbejárat a telephelyre.<br><br>🚗 Parkolás a kapu után<br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!"
+                content: "Főbejárat a telephelyre.<br><br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!"
             },
             main: {
                 title: "🏢 Főépület",
@@ -788,8 +794,8 @@
                 content: "Professzionális autójavítás és karbantartás.<br><br>📞 Szerviz: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>⚙️ Teljes körű szerviz szolgáltatás"
             },
             inspection: {
-                title: "📋 Műszaki Vizsga",
-                content: "Műszaki vizsgáztatás.<br><br>📞 Műszaki: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>📄 Gyors ügyintézés"
+                title: "📋 Eredetiségvizsgálat",
+                content: "Eredetiségvizsgálat.<br><br>📞 Eredetiségvizsgálat: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>📄 Gyors ügyintézés"
             },
             commercial: {
                 title: "🚛 Haszongépjármű Park",
@@ -827,7 +833,7 @@
         }
         
         function openHours() {
-            alert('Nyitvatartás:\n\n🏢 Főépület: H-P 9:00-18:00, Szo 9:00-16:00\n🔧 Szerviz: H-P 8:00-16:30\n📋 Műszaki: H-P 8:00-16:30\n\nVasárnap: Zárva');
+            alert('Nyitvatartás:\n\n🏢 Főépület: H-P 9:00-18:00, Szo 9:00-16:00\n🔧 Szerviz: H-P 8:00-16:30\n📋 Eredetiségvizsgálat: H-P 8:00-16:30\n\nVasárnap: Zárva');
         }
         
         function showAddress() {
@@ -841,7 +847,7 @@
         }
         
         function requestInspection() {
-            if (confirm('Műszaki vizsga időpont?\n\n📞 Hívás: +36 20 804 8666\n🕐 Nyitvatartás: H-P 8:00-16:30\n\nTelefonálás most?')) {
+            if (confirm('Eredetiségvizsgálat időpont?\n\n📞 Hívás: +36 20 804 8666\n🕐 Nyitvatartás: H-P 8:00-16:30\n\nTelefonálás most?')) {
                 window.location.href = 'tel:+36208048666';
             }
         }
