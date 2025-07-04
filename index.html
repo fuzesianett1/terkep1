@@ -640,43 +640,43 @@
         <div class="map-container">
             <div class="map-content">
                 <!-- Kapu - lent balra -->
-                <div class="gate" onclick="showInfo('gate')">
+                <div class="gate">
                     <div class="building-title">🚪 KAPU</div>
                     <div class="building-subtitle">Bejárat</div>
                 </div>
                 
                 <!-- Főépület - középen -->
-                <div class="building main-building has-image" onclick="showInfo('main')">
-                    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/1.png" alt="Főépület" class="building-image">
+                <div class="building main-building has-image">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">FŐÉPÜLET</div>
+                        <div class="building-title">🏢 FŐÉPÜLET</div>
                         <div class="building-subtitle">Értékesítés • Hitel</div>
                     </div>
                 </div>
                 
                 <!-- Szerviz - balra -->
-                <div class="building service-building has-image" onclick="showInfo('service')">
+                <div class="building service-building has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">SZERVIZ</div>
+                        <div class="building-title">🔧 SZERVIZ</div>
                         <div class="building-subtitle">Javítás</div>
                     </div>
                 </div>
                 
                 <!-- Eredetiségvizsgálat - főépület felett -->
-                <div class="building inspection-building has-image" onclick="showInfo('inspection')">
+                <div class="building inspection-building has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">EREDETISÉG-</div>
+                        <div class="building-title">📋 EREDETISÉG-</div>
                         <div class="building-subtitle">VIZSGÁLAT</div>
                     </div>
                 </div>
                 
                 <!-- Haszongépjármű park - jobbra -->
-                <div class="building commercial-park has-image" onclick="showInfo('commercial')">
+                <div class="building commercial-park has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">HASZON-</div>
+                        <div class="building-title">🚛 HASZON-</div>
                         <div class="building-subtitle">GÉPJÁRMŰ</div>
                     </div>
                 </div>
@@ -893,51 +893,54 @@
         document.addEventListener('DOMContentLoaded', function() {
             const buildings = document.querySelectorAll('.building, .gate');
             
+            // Épület típus mapping
+            const buildingTypes = {
+                'gate': 'gate',
+                'main-building': 'main',
+                'service-building': 'service',
+                'inspection-building': 'inspection',
+                'commercial-park': 'commercial'
+            };
+            
             buildings.forEach(building => {
-                // Eltávolítjuk az onclick attribútumot hogy ne fusson automatikusan
-                const onclickValue = building.getAttribute('onclick');
-                building.removeAttribute('onclick');
-                
-                // Csak kattintásra működjön
-                building.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    
-                    if (onclickValue) {
-                        const match = onclickValue.match(/showInfo\('(.+?)'\)/);
-                        if (match) {
-                            showInfo(match[1]);
-                        }
+                // Épület típus meghatározása a CSS osztályok alapján
+                let buildingType = null;
+                for (const [className, type] of Object.entries(buildingTypes)) {
+                    if (building.classList.contains(className)) {
+                        buildingType = type;
+                        break;
                     }
-                });
+                }
                 
-                // Touch események
-                building.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    this.style.opacity = '0.8';
-                    this.style.transform = 'scale(0.95)';
-                }, { passive: false });
-                
-                building.addEventListener('touchend', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.style.opacity = '1';
-                    this.style.transform = 'scale(1)';
+                if (buildingType) {
+                    // Click esemény
+                    building.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showInfo(buildingType);
+                    });
                     
-                    // Trigger the appropriate function
-                    if (onclickValue) {
-                        const match = onclickValue.match(/showInfo\('(.+?)'\)/);
-                        if (match) {
-                            showInfo(match[1]);
-                        }
-                    }
-                }, { passive: false });
-                
-                // Touchcancel esemény
-                building.addEventListener('touchcancel', function(e) {
-                    this.style.opacity = '1';
-                    this.style.transform = 'scale(1)';
-                }, { passive: false });
+                    // Touch események
+                    building.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        this.style.opacity = '0.8';
+                        this.style.transform = 'scale(0.95)';
+                    }, { passive: false });
+                    
+                    building.addEventListener('touchend', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                        showInfo(buildingType);
+                    }, { passive: false });
+                    
+                    // Touchcancel esemény
+                    building.addEventListener('touchcancel', function(e) {
+                        this.style.opacity = '1';
+                        this.style.transform = 'scale(1)';
+                    }, { passive: false });
+                }
             });
             
             // Contact items
