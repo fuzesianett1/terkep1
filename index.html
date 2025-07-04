@@ -1,14 +1,4 @@
-// Modal bezárás kattintásra
-        window.onclick = function(event) {
-            const modal = document.getElementById('infoModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }        /* Főépület - középen - 3D KÉP */
-        .main-building {
-            width: 120px;
-            height: 80px;
-            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAFQCAYAAAAnuayuAAAAAXNSR0IArs4c6QAAAIRlWElmTU0AKgAAAAgABQESAAMAAAABAAEAAAEaAAUAAAABAAAASgEbAAUAAAABAAAAUgEoAAMAAAABAAIAAIdpAAQAAAABAAAAWgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAiygAwAEAAAAAQAAAUAAAAAA8VV9MwAAAAlwSFlzAAALEwAACxMBAJqcGAAAFLZJREFUeAHt3T2MHEXUx/Hqer7gJOCNCAkUJYGjNAgEQqIICQlEQAQBOBNfNglSgNZdTgdSgDURBnCEMI6BRAjBMgEQSAGsEEEHIEQQICGQEJCQQgRCABGIQiKwkJiQkJCQQoKAOOquu9fz8zPdM90z3a+dqq7/+kn2PbOzs29/+3++VV1T89TvvzPfObW6lJqmqUmRKbFpUgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFKQgFK<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
@@ -129,7 +119,6 @@
             font-weight: 700;
             text-align: center;
             font-size: 11px;
-            padding: 16px 12px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 
@@ -140,6 +129,7 @@
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            overflow: hidden;
         }
         
         .building:hover, .building:active {
@@ -149,6 +139,40 @@
                 inset 0 2px 0 rgba(255,255,255,0.4);
         }
         
+        /* Képek stílusai */
+        .building-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .building-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 0 0 16px 16px;
+            font-size: 10px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .building-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .building-subtitle {
+            font-size: 9px;
+            opacity: 0.9;
+        }
+        
         /* Szerviz - bal felül */
         .service-building {
             width: 90px;
@@ -156,148 +180,15 @@
             background: var(--dark-text);
             top: 60px;
             left: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
-        /* Főépület - középen - FOTOREALISZTIKUS DESIGN */
+        /* Főépület - középen */
         .main-building {
             width: 120px;
             height: 80px;
-            background: linear-gradient(180deg, #555a66 0%, #3d4147 50%, #2d3035 100%);
+            background: var(--primary);
             top: 160px;
             left: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            position: relative;
-            overflow: visible;
-            border-radius: 4px;
-            box-shadow: 
-                0 8px 25px rgba(0,0,0,0.3),
-                inset 0 1px 0 rgba(255,255,255,0.1),
-                inset 0 -1px 0 rgba(0,0,0,0.2);
-            border: 1px solid rgba(0,0,0,0.1);
-        }
-        
-        /* Metallic panel texture */
-        .main-building::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: 
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 8px,
-                    rgba(255,255,255,0.05) 8px,
-                    rgba(255,255,255,0.05) 9px
-                ),
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 12px,
-                    rgba(255,255,255,0.03) 12px,
-                    rgba(255,255,255,0.03) 13px
-                );
-            border-radius: 4px;
-            z-index: 1;
-        }
-        
-        /* Üvegfal bal oldalon - 3 függőleges panel */
-        .glass-wall {
-            position: absolute;
-            left: 8px;
-            top: 8px;
-            width: 38px;
-            height: 64px;
-            background: linear-gradient(135deg, 
-                rgba(180,220,255,0.95) 0%, 
-                rgba(140,200,255,0.8) 30%,
-                rgba(160,210,255,0.9) 70%,
-                rgba(120,180,255,0.7) 100%);
-            border-radius: 2px;
-            backdrop-filter: blur(3px);
-            box-shadow: 
-                inset 0 1px 0 rgba(255,255,255,0.6),
-                inset 0 -1px 0 rgba(0,0,0,0.1),
-                0 2px 8px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.4);
-            z-index: 2;
-        }
-        
-        /* 3 üvegpanel elválasztó vonalak */
-        .glass-wall::before {
-            content: '';
-            position: absolute;
-            left: 12px;
-            top: 0;
-            width: 1px;
-            height: 100%;
-            background: linear-gradient(180deg, 
-                transparent 0%, 
-                rgba(255,255,255,0.4) 10%, 
-                rgba(255,255,255,0.2) 50%, 
-                rgba(255,255,255,0.4) 90%, 
-                transparent 100%);
-            z-index: 3;
-        }
-        
-        .glass-wall::after {
-            content: '';
-            position: absolute;
-            left: 25px;
-            top: 0;
-            width: 1px;
-            height: 100%;
-            background: linear-gradient(180deg, 
-                transparent 0%, 
-                rgba(255,255,255,0.4) 10%, 
-                rgba(255,255,255,0.2) 50%, 
-                rgba(255,255,255,0.4) 90%, 
-                transparent 100%);
-            z-index: 3;
-        }
-        
-        /* Piros ajtókeret jobb oldalon - kiemelkedő */
-        .red-door-frame {
-            position: absolute;
-            right: 8px;
-            top: 18px;
-            width: 28px;
-            height: 44px;
-            background: linear-gradient(135deg, 
-                #ff4d3d 0%, 
-                var(--primary) 50%, 
-                #d63c2e 100%);
-            border-radius: 2px;
-            box-shadow: 
-                0 4px 12px rgba(237, 70, 56, 0.4),
-                inset 0 1px 0 rgba(255,255,255,0.3),
-                inset 0 -1px 0 rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.2);
-            z-index: 2;
-            transform: translateZ(2px);
-        }
-        
-        /* Ajtó belső része */
-        .red-door-frame::before {
-            content: '';
-            position: absolute;
-            left: 3px;
-            top: 3px;
-            width: 22px;
-            height: 38px;
-            background: linear-gradient(135deg, 
-                rgba(0,0,0,0.3) 0%, 
-                rgba(0,0,0,0.1) 50%, 
-                rgba(0,0,0,0.2) 100%);
-            border-radius: 1px;
-            box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
         }
         
         /* Műszaki vizsga - főépület FELETT */
@@ -305,14 +196,8 @@
             width: 80px;
             height: 60px;
             background: linear-gradient(135deg, var(--secondary-text) 0%, #6b7280 50%, #4b5563 100%);
-            box-shadow: 
-                0 10px 30px rgba(134, 141, 152, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2);
             top: 80px;
             left: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
         /* Haszongépjármű park - még nagyobb méret */
@@ -320,14 +205,8 @@
             width: 150px;
             height: 100px;
             background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 50%, #b91c1c 100%);
-            box-shadow: 
-                0 10px 30px rgba(237, 70, 56, 0.35),
-                inset 0 2px 0 rgba(255,255,255,0.2);
             top: 150px;
             left: 450px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
         .commercial-park.pulse-glow {
@@ -378,6 +257,7 @@
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            overflow: hidden;
         }
         
         .gate:hover, .gate:active {
@@ -387,9 +267,13 @@
                 inset 0 2px 0 rgba(255,255,255,0.4);
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.85; }
+        /* Fallback (háttérszín) ha nincs kép */
+        .building.no-image {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 16px 12px;
         }
         
         .you-are-here {
@@ -666,7 +550,18 @@
             
             .building {
                 font-size: 10px;
-                padding: 10px 6px;
+            }
+            
+            .building-overlay {
+                padding: 6px 8px;
+            }
+            
+            .building-title {
+                font-size: 10px;
+            }
+            
+            .building-subtitle {
+                font-size: 8px;
             }
             
             .main-building {
@@ -720,33 +615,48 @@
             <div class="map-content">
                 <!-- Kapu - lent balra -->
                 <div class="gate" onclick="showInfo('gate')">
-                    <div>🚪 KAPU</div>
-                    <div style="font-size: 8px; margin-top: 2px; opacity: 0.8;">Bejárat</div>
+                    <img src="gate.jpg" alt="Kapu" class="building-image" style="display: none;" onerror="this.style.display='none'">
+                    <div class="building-overlay">
+                        <div class="building-title">🚪 KAPU</div>
+                        <div class="building-subtitle">Bejárat</div>
+                    </div>
                 </div>
                 
-                <!-- Főépület - középen - 3D KÉP -->
-                <div class="building main-building" onclick="showInfo('main')" id="main-building">
-                    <!-- Funkció szöveg -->
-                    <div style="font-size: 8px; margin-top: 5px; opacity: 0.95; z-index: 10; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 8px; color: white;">Értékesítés • Hitel</div>
-                </div>
+                <!-- Főépület - középen -->
+<div class="building main-building" onclick="showInfo('main')">
+    <img src="https://raw.githubusercontent.com/fuzesianett1/fuzesianett1/main/1.png" alt="Főépület" class="building-image" style="display: block;" onerror="this.style.display='none'; this.parentElement.classList.add('no-image');">
+    <div class="building-overlay">
+        <div class="building-title">🏢 FŐÉPÜLET</div>
+        <div class="building-subtitle">Értékesítés • Hitel</div>
+    </div>
+</div>
                 
-                <!-- Szerviz - balra, kapu mellé -->
+                <!-- Szerviz - balra -->
                 <div class="building service-building" onclick="showInfo('service')">
-                    <div>🔧 SZERVIZ</div>
-                    <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Javítás</div>
+                    <img src="service-building.jpg" alt="Szerviz" class="building-image" style="display: none;" onerror="this.style.display='none'">
+                    <div class="building-overlay">
+                        <div class="building-title">🔧 SZERVIZ</div>
+                        <div class="building-subtitle">Javítás</div>
+                    </div>
                 </div>
                 
                 <!-- Műszaki vizsga - főépület felett -->
                 <div class="building inspection-building" onclick="showInfo('inspection')">
-                    <div>📋 MŰSZAKI</div>
-                    <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Vizsga</div>
+                    <img src="inspection-building.jpg" alt="Műszaki vizsga" class="building-image" style="display: none;" onerror="this.style.display='none'">
+                    <div class="building-overlay">
+                        <div class="building-title">📋 MŰSZAKI</div>
+                        <div class="building-subtitle">Vizsga</div>
+                    </div>
                 </div>
                 
-                <!-- Haszongépjármű park - 3D KÉP -->
-                <div class="building commercial-park pulse-glow" onclick="showInfo('commercial')" id="commercial-park">
-                    <!-- Funkció szöveg -->
-                    <div style="font-size: 9px; margin-top: 5px; opacity: 0.95; z-index: 10; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.8); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 8px; color: white;">🚛 HASZONGÉPJÁRMŰ</div>
-                </div>
+                <!-- Haszongépjármű park - jobbra -->
+<div class="building commercial-park pulse-glow" onclick="showInfo('commercial')">
+    <img src="https://raw.githubusercontent.com/fuzesianett1/fuzesianett1/main/2.png" alt="Haszongépjármű park" class="building-image" style="display: block;" onerror="this.style.display='none'; this.parentElement.classList.add('no-image');">
+    <div class="building-overlay">
+        <div class="building-title">🚛 HASZON-</div>
+        <div class="building-subtitle">GÉPJÁRMŰ</div>
+    </div>
+</div>
                 
                 <div class="distance-badge distance-1">120m</div>
                 <div class="arrow arrow-1">→</div>
@@ -789,7 +699,7 @@
                 <h3>Épületek</h3>
                 <div class="legend-grid">
                     <div class="legend-item">
-                        <div class="legend-color" style="background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);"></div>
+                        <div class="legend-color" style="background: var(--primary);"></div>
                         <span>Főépület</span>
                     </div>
                     <div class="legend-item">
@@ -948,41 +858,61 @@
             }
         }
         
-        // Képek betöltése JavaScript-ben
-        document.addEventListener('DOMContentLoaded', function() {
-            // Főépület képének betöltése
-            const mainBuilding = document.getElementById('main-building');
-            if (window.fs && window.fs.readFile) {
-                window.fs.readFile('image1.png')
-                    .then(data => {
-                        const base64 = btoa(String.fromCharCode(...new Uint8Array(data)));
-                        mainBuilding.style.backgroundImage = `url('data:image/png;base64,${base64}')`;
-                    })
-                    .catch(err => {
-                        console.log('Nem sikerült betölteni a főépület képét:', err);
-                    });
+        // Modal bezárás kattintásra
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
             }
-            
-            // Haszongépjármű park képének betöltése
-            const commercialPark = document.getElementById('commercial-park');
-            if (window.fs && window.fs.readFile) {
-                window.fs.readFile('image2.png')
-                    .then(data => {
-                        const base64 = btoa(String.fromCharCode(...new Uint8Array(data)));
-                        commercialPark.style.backgroundImage = `url('data:image/png;base64,${base64}')`;
-                    })
-                    .catch(err => {
-                        console.log('Nem sikerült betölteni a haszongépjármű park képét:', err);
-                    });
-            }
-        });
+        }
         
-        // Touch optimalizálás
+        // Képek betöltése és fallback kezelés
         document.addEventListener('DOMContentLoaded', function() {
             const buildings = document.querySelectorAll('.building, .gate');
-            const contactItems = document.querySelectorAll('.contact-item');
             
-            // Building és gate click events
+            buildings.forEach(building => {
+                const img = building.querySelector('.building-image');
+                const overlay = building.querySelector('.building-overlay');
+                
+                if (img) {
+                    // Próbáljuk betölteni a képet
+                    img.onload = function() {
+                        this.style.display = 'block';
+                        building.style.padding = '0';
+                    };
+                    
+                    img.onerror = function() {
+                        // Ha a kép nem töltődik be, használjuk a fallback dizájnt
+                        this.style.display = 'none';
+                        building.classList.add('no-image');
+                        building.style.padding = '16px 12px';
+                        building.style.display = 'flex';
+                        building.style.flexDirection = 'column';
+                        building.style.justifyContent = 'center';
+                        building.style.alignItems = 'center';
+                        
+                        // Overlay tartalmát közvetlenül a buildingbe tesszük
+                        if (overlay) {
+                            const title = overlay.querySelector('.building-title');
+                            const subtitle = overlay.querySelector('.building-subtitle');
+                            
+                            building.innerHTML = `
+                                <div style="font-size: 11px; font-weight: 700; margin-bottom: 3px;">
+                                    ${title ? title.textContent : ''}
+                                </div>
+                                <div style="font-size: 9px; opacity: 0.9;">
+                                    ${subtitle ? subtitle.textContent : ''}
+                                </div>
+                            `;
+                        }
+                    };
+                    
+                    // Indítjuk a betöltést
+                    img.src = img.src;
+                }
+            });
+            
+            // Touch optimalizálás
             buildings.forEach(element => {
                 element.addEventListener('click', function(e) {
                     e.stopPropagation();
@@ -1019,6 +949,7 @@
             });
             
             // Contact items
+            const contactItems = document.querySelectorAll('.contact-item');
             contactItems.forEach(element => {
                 element.addEventListener('touchstart', function() {
                     this.style.opacity = '0.8';
