@@ -151,16 +151,51 @@
             justify-content: center;
         }
         
-        /* Főépület - középen */
+        /* Főépület - középen - ÚJ DESIGN */
         .main-building {
             width: 120px;
             height: 80px;
-            background: var(--primary);
+            background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
             top: 160px;
             left: 180px;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            position: relative;
+            overflow: visible;
+            border-radius: 8px;
+        }
+        
+        /* Üvegfal bal oldalon */
+        .main-building::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 12px;
+            width: 35px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(200,220,255,0.9) 0%, rgba(150,200,255,0.7) 100%);
+            border-radius: 2px;
+            backdrop-filter: blur(5px);
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.5),
+                0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        /* Piros ajtókeret jobb oldalon */
+        .main-building::after {
+            content: '';
+            position: absolute;
+            right: 8px;
+            top: 20px;
+            width: 25px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 2px;
+            box-shadow: 
+                0 2px 8px rgba(237, 70, 56, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
         }
         
         /* Műszaki vizsga - főépület FELETT */
@@ -587,10 +622,24 @@
                     <div style="font-size: 8px; margin-top: 2px; opacity: 0.8;">Bejárat</div>
                 </div>
                 
-                <!-- Főépület - középen -->
+                <!-- Főépület - középen - ÚJ DESIGN -->
                 <div class="building main-building" onclick="showInfo('main')">
-                    <div>🏢 FŐÉPÜLET</div>
-                    <div style="font-size: 9px; margin-top: 3px; opacity: 0.9;">Értékesítés • Hitel</div>
+                    <!-- AUTO DUAL felirat -->
+                    <div style="position: absolute; top: 4px; left: 50%; transform: translateX(-50%); font-size: 8px; font-weight: 700; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.5); z-index: 10;">AUTO DUAL</div>
+                    
+                    <!-- Piros autó ikon -->
+                    <div style="position: absolute; top: 4px; right: 12px; font-size: 6px; color: white; z-index: 10;">🚗</div>
+                    
+                    <!-- Virágládák a főépület alján -->
+                    <div style="position: absolute; bottom: -10px; left: 8px; width: 12px; height: 8px; background: #8B4513; border-radius: 1px; z-index: 5;"></div>
+                    <div style="position: absolute; bottom: -10px; right: 8px; width: 12px; height: 8px; background: #8B4513; border-radius: 1px; z-index: 5;"></div>
+                    
+                    <!-- Kis zöld fák a ládákban -->
+                    <div style="position: absolute; bottom: -6px; left: 12px; width: 4px; height: 4px; background: #228B22; border-radius: 50%; z-index: 6;"></div>
+                    <div style="position: absolute; bottom: -6px; right: 12px; width: 4px; height: 4px; background: #228B22; border-radius: 50%; z-index: 6;"></div>
+                    
+                    <!-- Funkció szöveg -->
+                    <div style="font-size: 9px; margin-top: 35px; opacity: 0.9; z-index: 10;">Értékesítés • Hitel</div>
                 </div>
                 
                 <!-- Szerviz - balra, kapu mellé -->
@@ -652,7 +701,7 @@
                 <h3>Épületek</h3>
                 <div class="legend-grid">
                     <div class="legend-item">
-                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <div class="legend-color" style="background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);"></div>
                         <span>Főépület</span>
                     </div>
                     <div class="legend-item">
