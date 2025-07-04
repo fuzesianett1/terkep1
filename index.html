@@ -1,386 +1,968 @@
+Pasted content
+32.55 KB •964 lines
+•
+Formatting may be inconsistent from source
 <!DOCTYPE html>
 <html lang="hu">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Autókereskedés Térkép</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      :root {
-        --primary: #ed4638;
-        --white: #ffffff;
-        --light-gray: #f3f4f6;
-        --dark-text: #333333;
-        --secondary-text: #868d98;
-        --shadow: rgba(0, 0, 0, 0.1);
-      }
-
-      body {
-        font-family: "Montserrat", sans-serif;
-        background: var(--light-gray);
-        min-height: 100vh;
-        padding: 16px;
-        color: var(--dark-text);
-      }
-
-      .container {
-        max-width: 450px;
-        margin: 0 auto;
-        background: var(--white);
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 20px var(--shadow);
-      }
-
-      .header {
-        background: var(--primary);
-        padding: 24px 20px;
-        text-align: center;
-        color: var(--white);
-      }
-
-      .header h1 {
-        font-size: 20px;
-        font-weight: 700;
-        margin-bottom: 6px;
-        letter-spacing: -0.5px;
-      }
-
-      .header p {
-        font-size: 14px;
-        font-weight: 400;
-        opacity: 0.9;
-      }
-
-      .map-container {
-        position: relative;
-        height: 400px;
-        background: linear-gradient(
-          135deg,
-          #f8fafc 0%,
-          #e2e8f0 30%,
-          #f1f5f9 100%
-        );
-        margin: 15px;
-        border-radius: 24px;
-        overflow-x: auto;
-        overflow-y: hidden;
-        width: calc(100% - 30px);
-        box-shadow:
-          0 20px 60px rgba(0, 0, 0, 0.08),
-          inset 0 1px 0 rgba(255, 255, 255, 0.6),
-          0 0 0 1px rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        -webkit-overflow-scrolling: touch;
-      }
-
-      .map-content {
-        position: relative;
-        width: 700px;
-        height: 100%;
-        background: linear-gradient(
-          135deg,
-          #f8fafc 0%,
-          #e2e8f0 30%,
-          #f1f5f9 100%
-        );
-        backdrop-filter: blur(10px);
-      }
-
-      .scroll-hint {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        background: linear-gradient(
-          135deg,
-          rgba(255, 255, 255, 0.95),
-          rgba(255, 255, 255, 0.8)
-        );
-        color: var(--dark-text);
-        padding: 8px 16px;
-        border-radius: 20px;
-        font-size: 11px;
-        font-weight: 600;
-        animation: scroll-pulse 3s infinite;
-        box-shadow:
-          0 8px 32px rgba(0, 0, 0, 0.1),
-          inset 0 1px 0 rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.7);
-      }
-
-      @keyframes scroll-pulse {
-        0%,
-        100% {
-          transform: scale(1);
-          opacity: 0.9;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        50% {
-          transform: scale(1.05);
-          opacity: 1;
+        
+        :root {
+            --primary: #ED4638;
+            --white: #FFFFFF;
+            --light-gray: #F3F4F6;
+            --dark-text: #333333;
+            --secondary-text: #868D98;
+            --shadow: rgba(0,0,0,0.1);
         }
-      }
-
-      .building {
-        position: absolute;
-        border-radius: 16px;
-        color: var(--white);
-        font-weight: 700;
-        text-align: center;
-        font-size: 11px;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow:
-          0 10px 40px rgba(0, 0, 0, 0.15),
-          inset 0 2px 0 rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(20px);
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        overflow: hidden;
-      }
-
-      .building:hover,
-      .building:active {
-        transform: translateY(-8px) scale(1.05);
-        box-shadow:
-          0 20px 60px rgba(0, 0, 0, 0.4),
-          inset 0 2px 0 rgba(255, 255, 255, 0.4);
-      }
-
-      /* Képek stílusai */
-      .building-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 16px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      }
-
-      .building-overlay {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-        color: white;
-        padding: 8px 12px;
-        border-radius: 0 0 16px 16px;
-        font-size: 10px;
-        font-weight: 600;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-      }
-
-      .building-title {
-        font-size: 11px;
-        font-weight: 700;
-        margin-bottom: 2px;
-      }
-
-      .building-subtitle {
-        font-size: 9px;
-        opacity: 0.9;
-      }
-
-      /* Szerviz - bal felül */
-      .service-building {
-        width: 90px;
-        height: 70px;
-        background: var(--dark-text);
-        top: 60px;
-        left: 10px;
-      }
-
-      /* Főépület - középen - háttér eltávolítva */
-      .main-building {
-        width: 120px;
-        height: 80px;
-        top: 160px;
-        left: 180px;
-      }
-
-      /* Műszaki vizsga - főépület FELETT */
-      .inspection-building {
-        width: 80px;
-        height: 60px;
-        background: linear-gradient(
-          135deg,
-          var(--secondary-text) 0%,
-          #6b7280 50%,
-          #4b5563 100%
-        );
-        top: 80px;
-        left: 180px;
-      }
-
-      /* Haszongépjármű park - háttér eltávolítva, pulzálás letiltva */
-      .commercial-park {
-        width: 150px;
-        height: 100px;
-        top: 150px;
-        left: 450px;
-        background: none !important;
-        box-shadow: none !important;
-      }
-
-      .commercial-park.pulse-glow {
-        animation: none !important;
-        box-shadow: none !important;
-      }
-
-      /* Kapu - lent balra */
-      .gate {
-        position: absolute;
-        bottom: 20px;
-        left: 120px;
-        width: 80px;
-        height: 50px;
-        background: var(--secondary-text);
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        color: var(--white);
-        font-weight: 700;
-        text-align: center;
-        font-size: 10px;
-        cursor: pointer;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        box-shadow:
-          0 8px 32px rgba(0, 0, 0, 0.15),
-          inset 0 2px 0 rgba(255, 255, 255, 0.3);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        backdrop-filter: blur(20px);
-        touch-action: manipulation;
-        -webkit-tap-highlight-color: transparent;
-        user-select: none;
-        overflow: hidden;
-      }
-
-      .gate:hover,
-      .gate:active {
-        transform: translateY(-4px) scale(1.05);
-        box-shadow:
-          0 12px 40px rgba(0, 0, 0, 0.4),
-          inset 0 2px 0 rgba(255, 255, 255, 0.4);
-      }
-
-      /* Fallback (háttérszín) ha nincs kép */
-      .building.no-image {
-        background: var(--primary);
-        color: var(--white);
-      }
-
-      /* Animáció a pulzálásra */
-      @keyframes pulse-glow {
-        0% {
-          box-shadow: 0 0 12px 0px rgba(237, 70, 56, 0.7);
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--light-gray);
+            min-height: 100vh;
+            padding: 16px;
+            color: var(--dark-text);
         }
-        50% {
-          box-shadow: 0 0 24px 6px rgba(237, 70, 56, 0.8);
-        }
-        100% {
-          box-shadow: 0 0 12px 0px rgba(237, 70, 56, 0.7);
-        }
-      }
-
-      /* Eredeti pulzálás eltávolítva - ha akarod visszarakhatod */
-
-      /* Reszponzív mobilra */
-      @media (max-width: 500px) {
+        
         .container {
-          max-width: 100%;
+            max-width: 450px;
+            margin: 0 auto;
+            background: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px var(--shadow);
         }
+        
+        .header {
+            background: var(--primary);
+            padding: 24px 20px;
+            text-align: center;
+            color: var(--white);
+        }
+        
+        .header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            font-size: 14px;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+        
+        .map-container {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            margin: 15px;
+            border-radius: 24px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            width: calc(100% - 30px);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.08),
+                inset 0 1px 0 rgba(255,255,255,0.6),
+                0 0 0 1px rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.5);
+            -webkit-overflow-scrolling: touch;
+        }
+        
         .map-content {
-          width: 650px;
+            position: relative;
+            width: 700px;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            backdrop-filter: blur(10px);
         }
-      }
+        
+        .scroll-hint {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+            color: var(--dark-text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            animation: scroll-pulse 3s infinite;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.9);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.7);
+        }
+        
+        @keyframes scroll-pulse {
+            0%, 100% { 
+                transform: scale(1);
+                opacity: 0.9;
+            }
+            50% { 
+                transform: scale(1.05);
+                opacity: 1;
+            }
+        }
+        
+        .building {
+            position: absolute;
+            border-radius: 16px;
+            color: var(--white);
+            font-weight: 700;
+            text-align: center;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.15),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(20px);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            overflow: hidden;
+        }
+        
+        .building:hover, .building:active {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+        
+        /* Képek stílusai */
+        .building-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .building-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 0 0 16px 16px;
+            font-size: 10px;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .building-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+        
+        .building-subtitle {
+            font-size: 9px;
+            opacity: 0.9;
+        }
+        
+        /* Szerviz - bal felül */
+        .service-building {
+            width: 90px;
+            height: 70px;
+            background: var(--dark-text);
+            top: 60px;
+            left: 10px;
+        }
+        
+        /* Főépület - középen */
+        .main-building {
+            width: 120px;
+            height: 80px;
+            background: var(--primary);
+            top: 160px;
+            left: 180px;
+        }
+        
+        /* Műszaki vizsga - főépület FELETT */
+        .inspection-building {
+            width: 80px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--secondary-text) 0%, #6b7280 50%, #4b5563 100%);
+            top: 80px;
+            left: 180px;
+        }
+        
+        /* Haszongépjármű park - még nagyobb méret */
+        .commercial-park {
+            width: 150px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, #d63c2e 50%, #b91c1c 100%);
+            top: 150px;
+            left: 450px;
+        }
+        
+        .commercial-park.pulse-glow {
+            animation: pulse-glow 4s infinite;
+        }
+        
+        .pulse-glow {
+            animation: pulse-glow 4s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 
+                    0 10px 30px rgba(237, 70, 56, 0.35),
+                    inset 0 2px 0 rgba(255,255,255,0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 15px 45px rgba(237, 70, 56, 0.5),
+                    inset 0 2px 0 rgba(255,255,255,0.3);
+            }
+        }
+        
+        /* Kapu - lent balra */
+        .gate {
+            position: absolute;
+            bottom: 20px;
+            left: 120px;
+            width: 80px;
+            height: 50px;
+            background: var(--secondary-text);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--white);
+            font-weight: 700;
+            text-align: center;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.15),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+            border: 1px solid rgba(255,255,255,0.4);
+            backdrop-filter: blur(20px);
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            overflow: hidden;
+        }
+        
+        .gate:hover, .gate:active {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 
+                0 12px 40px rgba(0,0,0,0.4),
+                inset 0 2px 0 rgba(255,255,255,0.4);
+        }
+        
+        /* Fallback (háttérszín) ha nincs kép */
+        .building.no-image {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 16px 12px;
+        }
+        
+        .you-are-here {
+            position: absolute;
+            bottom: 80px;
+            left: 120px;
+            background: var(--primary);
+            color: var(--white);
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 9px;
+            font-weight: 600;
+            animation: bounce 2s infinite;
+            box-shadow: 0 4px 15px rgba(237, 70, 56, 0.3);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            60% { transform: translateY(-3px); }
+        }
+        
+        .distance-badge {
+            position: absolute;
+            background: var(--white);
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--dark-text);
+            border: 2px solid var(--primary);
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+        
+        .distance-1 {
+            top: 190px;
+            left: 350px;
+        }
+        
+        .arrow {
+            position: absolute;
+            font-size: 16px;
+            color: var(--primary);
+            animation: float 2s ease-in-out infinite;
+            font-weight: bold;
+            z-index: 5;
+        }
+        
+        .arrow-1 {
+            top: 200px;
+            left: 390px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+        
+        .info-panel {
+            padding: 24px;
+            background: var(--white);
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .contact-item {
+            text-align: center;
+            padding: 16px 12px;
+            background: var(--light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+        
+        .contact-item:hover {
+            border-color: var(--primary);
+            background: #fef7f6;
+        }
+        
+        .contact-item:active {
+            transform: scale(0.98);
+        }
+        
+        .contact-item .icon {
+            font-size: 20px;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .contact-item .label {
+            font-size: 12px;
+            color: var(--secondary-text);
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+        
+        .contact-item .value {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--dark-text);
+            word-break: break-word;
+            line-height: 1.2;
+        }
+        
+        .legend {
+            margin-top: 24px;
+        }
+        
+        .legend h3 {
+            font-size: 16px;
+            margin-bottom: 12px;
+            color: var(--dark-text);
+            font-weight: 600;
+        }
+        
+        .legend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--secondary-text);
+            padding: 8px;
+            background: var(--light-gray);
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        
+        .quick-actions {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+        
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .action-item {
+            background: linear-gradient(135deg, var(--light-gray) 0%, #e5e7eb 100%);
+            border: 2px solid transparent;
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+            background: linear-gradient(135deg, #fef7f6 0%, #fff1f0 100%);
+            box-shadow: 0 12px 40px rgba(237, 70, 56, 0.2);
+        }
+        
+        .action-item:active {
+            transform: translateY(-2px) scale(0.98);
+        }
+        
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .action-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 4px;
+        }
+        
+        .action-subtitle {
+            font-size: 11px;
+            color: var(--secondary-text);
+            font-weight: 500;
+        }
+        
+        .demo-mode {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: var(--dark-text);
+            color: var(--white);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 10px;
+            z-index: 1000;
+            font-weight: 500;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-content {
+            background: var(--white);
+            margin: 20% auto;
+            padding: 24px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 320px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+        
+        .modal-content h3 {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .modal-content p {
+            color: var(--secondary-text);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .close {
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            color: var(--secondary-text);
+            transition: color 0.2s ease;
+        }
+        
+        .close:hover {
+            color: var(--primary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .container {
+                margin: 8px;
+                max-width: none;
+            }
+            
+            .map-container {
+                margin: 16px;
+                height: 350px;
+            }
+            
+            .building {
+                font-size: 10px;
+            }
+            
+            .building-overlay {
+                padding: 6px 8px;
+            }
+            
+            .building-title {
+                font-size: 10px;
+            }
+            
+            .building-subtitle {
+                font-size: 8px;
+            }
+            
+            .main-building {
+                width: 100px;
+                height: 70px;
+            }
+            
+            .service-building {
+                width: 80px;
+                height: 60px;
+            }
+            
+            .commercial-park {
+                width: 120px;
+                height: 80px;
+            }
+            
+            .inspection-building {
+                width: 70px;
+                height: 50px;
+            }
+            
+            .action-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            .action-item {
+                padding: 16px 12px;
+            }
+            
+            .scroll-hint {
+                font-size: 10px;
+                padding: 6px 12px;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="container" role="main" aria-label="Autókereskedés térkép">
-      <header class="header">
-        <h1>Használtautó kereskedés</h1>
-        <p>Telephely térképe és fő egységek</p>
-      </header>
-      <div class="map-container" aria-label="Telephely térképe, kattintható épületekkel">
-        <div class="map-content">
-          <div class="scroll-hint" aria-live="polite" aria-atomic="true" aria-relevant="additions">⟶ húzd oldalra</div>
-
-          <!-- Szerviz -->
-          <div class="building service-building" tabindex="0" role="button" aria-pressed="false" aria-label="Szerviz">
-            <img
-              src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/1.png"
-              alt="Szerviz épület"
-              class="building-image"
-              onerror="this.style.display='none'; this.parentElement.classList.add('no-image');"
-            />
-            <div class="building-overlay">
-              <div class="building-title">🔧 Szerviz</div>
-              <div class="building-subtitle">&nbsp;</div>
-            </div>
-          </div>
-
-          <!-- Főépület (háttér nélkül) -->
-          <div class="building main-building" tabindex="0" role="button" aria-pressed="false" aria-label="Főépület">
-            <img
-              src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/3.png"
-              alt="Főépület"
-              class="building-image"
-              onerror="this.style.display='none'; this.parentElement.classList.add('no-image');"
-            />
-            <div class="building-overlay">
-              <div class="building-title">🏢 Főépület</div>
-              <div class="building-subtitle">&nbsp;</div>
-            </div>
-          </div>
-
-          <!-- Műszaki vizsga -->
-          <div class="building inspection-building" tabindex="0" role="button" aria-pressed="false" aria-label="Műszaki vizsga">
-            <img
-              src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/4.png"
-              alt="Műszaki vizsga épület"
-              class="building-image"
-              onerror="this.style.display='none'; this.parentElement.classList.add('no-image');"
-            />
-            <div class="building-overlay">
-              <div class="building-title">🔍 Műszaki vizsga</div>
-              <div class="building-subtitle">&nbsp;</div>
-            </div>
-          </div>
-
-          <!-- Haszongépjármű park (háttér nélkül, pulzálás kikapcsolva) -->
-          <div class="building commercial-park" tabindex="0" role="button" aria-pressed="false" aria-label="Haszongépjármű park">
-            <img
-              src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/2.png"
-              alt="Haszongépjármű park"
-              class="building-image"
-              onerror="this.style.display='none'; this.parentElement.classList.add('no-image');"
-            />
-            <div class="building-overlay">
-              <div class="building-title">🚛 HASZON-</div>
-              <div class="building-subtitle">GÉPJÁRMŰ</div>
-            </div>
-          </div>
-
-          <!-- Kapu -->
-          <div class="gate" tabindex="0" role="button" aria-pressed="false" aria-label="Kapu">
-            Kapu
-          </div>
+</head>
+<body>
+    <div class="demo-mode">DEMO</div>
+    
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚗 Autó Dual Térkép</h1>
+            <p>Érintsd meg a területeket a részletekért</p>
         </div>
-      </div>
+        
+        <!-- Map -->
+        <div class="map-container">
+            <div class="map-content">
+                <!-- Kapu - lent balra -->
+                <div class="gate" onclick="showInfo('gate')">
+                    <img src="gate.jpg" alt="Kapu" class="building-image" style="display: none;" onerror="this.style.display='none'">
+                    <div class="building-overlay">
+                        <div class="building-title">🚪 KAPU</div>
+                        <div class="building-subtitle">Bejárat</div>
+                    </div>
+                </div>
+                
+                <!-- Főépület - középen -->
+<div class="building main-building" onclick="showInfo('main')">
+    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/1.png" alt="Főépület" class="building-image" style="display: block;" onerror="this.style.display='none'; this.parentElement.classList.add('no-image');">
+    <div class="building-overlay">
+        <div class="building-title">🏢 FŐÉPÜLET</div>
+        <div class="building-subtitle">Értékesítés • Hitel</div>
     </div>
-  </body>
+</div>
+                
+                <!-- Szerviz - balra -->
+                <div class="building service-building" onclick="showInfo('service')">
+                    <img src="service-building.jpg" alt="Szerviz" class="building-image" style="display: none;" onerror="this.style.display='none'">
+                    <div class="building-overlay">
+                        <div class="building-title">🔧 SZERVIZ</div>
+                        <div class="building-subtitle">Javítás</div>
+                    </div>
+                </div>
+                
+                <!-- Műszaki vizsga - főépület felett -->
+                <div class="building inspection-building" onclick="showInfo('inspection')">
+                    <img src="inspection-building.jpg" alt="Műszaki vizsga" class="building-image" style="display: none;" onerror="this.style.display='none'">
+                    <div class="building-overlay">
+                        <div class="building-title">📋 MŰSZAKI</div>
+                        <div class="building-subtitle">Vizsga</div>
+                    </div>
+                </div>
+                
+                <!-- Haszongépjármű park - jobbra -->
+<div class="building commercial-park pulse-glow" onclick="showInfo('commercial')">
+    <img src="https://github.com/fuzesianett1/terkep1/raw/49e87b7a49b3f303c025b8a170ef2d3aa59f0c3e/2.png" alt="Haszongépjármű park" class="building-image" style="display: block;" onerror="this.style.display='none'; this.parentElement.classList.add('no-image');">
+    <div class="building-overlay">
+        <div class="building-title">🚛 HASZON-</div>
+        <div class="building-subtitle">GÉPJÁRMŰ</div>
+    </div>
+</div>
+                
+                <div class="distance-badge distance-1">120m</div>
+                <div class="arrow arrow-1">→</div>
+                
+                <div class="you-are-here">📍 ITT ÁLL ÖN</div>
+                
+                <div class="scroll-hint">← Húzd balra a térképet!</div>
+            </div>
+        </div>
+        
+        <!-- Info Panel -->
+        <div class="info-panel">
+            <div class="contact-info">
+                <div class="contact-item" onclick="openHours()">
+                    <span class="icon">🕐</span>
+                    <div class="label">Nyitva</div>
+                    <div class="value">H-P: 9-18, Szo: 9-16</div>
+                </div>
+                
+                <div class="contact-item" onclick="showEmail()">
+                    <span class="icon">✉️</span>
+                    <div class="label">Email</div>
+                    <div class="value">ugyfelszolgalat@autodual.hu</div>
+                </div>
+                
+                <div class="contact-item" onclick="callPhone()">
+                    <span class="icon">📞</span>
+                    <div class="label">Telefon</div>
+                    <div class="value">+36 20 804 8666</div>
+                </div>
+                
+                <div class="contact-item" onclick="showAddress()">
+                    <span class="icon">📍</span>
+                    <div class="label">Cím</div>
+                    <div class="value">Békéscsaba</div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <h3>Épületek</h3>
+                <div class="legend-grid">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <span>Főépület</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--dark-text);"></div>
+                        <span>Szerviz</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--secondary-text);"></div>
+                        <span>Műszaki vizsga</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--primary);"></div>
+                        <span>Haszongépjármű</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions Section -->
+    <div class="container" style="margin-top: 20px;">
+        <div class="quick-actions">
+            <h2 style="margin-bottom: 16px; font-size: 18px; font-weight: 600; text-align: center; color: var(--dark-text);">🎯 Gyors Műveletek</h2>
+            
+            <div class="action-grid">
+                <div class="action-item" onclick="requestService()">
+                    <div class="action-icon">🔧</div>
+                    <div class="action-title">Szerviz Időpont</div>
+                    <div class="action-subtitle">Foglalás</div>
+                </div>
+                
+                <div class="action-item" onclick="requestInspection()">
+                    <div class="action-icon">📋</div>
+                    <div class="action-title">Műszaki Időpont</div>
+                    <div class="action-subtitle">Gyors ügyintézés</div>
+                </div>
+                
+                <div class="action-item" onclick="requestCallback()">
+                    <div class="action-icon">📞</div>
+                    <div class="action-title">Visszahívás</div>
+                    <div class="action-subtitle">Kérés</div>
+                </div>
+                
+                <div class="action-item" onclick="showDirections()">
+                    <div class="action-icon">🗺️</div>
+                    <div class="action-title">Útvonalterv</div>
+                    <div class="action-subtitle">Navigáció</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+    
+    <script>
+        const buildingInfo = {
+            gate: {
+                title: "🚪 Bejárat",
+                content: "Főbejárat a telephelyre.<br><br>🚗 Parkolás a kapu után<br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!"
+            },
+            main: {
+                title: "🏢 Főépület",
+                content: "Itt találhatók az értékesítők és hitelügyintézők.<br><br>📞 Telefon: +36 20 804 8666<br>🕐 Nyitva: H-P 9:00-18:00, Szo 9:00-16:00<br><br>💡 <strong>Minden információ itt!</strong>"
+            },
+            service: {
+                title: "🔧 Szerviz",
+                content: "Professzionális autójavítás és karbantartás.<br><br>📞 Szerviz: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>⚙️ Teljes körű szerviz szolgáltatás"
+            },
+            inspection: {
+                title: "📋 Műszaki Vizsga",
+                content: "Műszaki vizsgáztatás.<br><br>📞 Műszaki: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>📄 Gyors ügyintézés"
+            },
+            commercial: {
+                title: "🚛 Haszongépjármű Park",
+                content: "Kisteherautók, furgonok és haszongépjárművek.<br><br>📍 120 méter a főépülettől lefelé"
+            }
+        };
+        
+        function showInfo(building) {
+            const modal = document.getElementById('infoModal');
+            const content = document.getElementById('modalContent');
+            const info = buildingInfo[building];
+            
+            content.innerHTML = `
+                <h3 style="margin-bottom: 15px;">${info.title}</h3>
+                <p>${info.content}</p>
+            `;
+            
+            modal.style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('infoModal').style.display = 'none';
+        }
+        
+        function callPhone() {
+            if (confirm('Hívás indítása: +36 20 804 8666?')) {
+                window.location.href = 'tel:+36208048666';
+            }
+        }
+        
+        function showEmail() {
+            if (confirm('Email küldése: ugyfelszolgalat@autodual.hu?')) {
+                window.location.href = 'mailto:ugyfelszolgalat@autodual.hu';
+            }
+        }
+        
+        function openHours() {
+            alert('Nyitvatartás:\n\n🏢 Főépület: H-P 9:00-18:00, Szo 9:00-16:00\n🔧 Szerviz: H-P 8:00-16:30\n📋 Műszaki: H-P 8:00-16:30\n\nVasárnap: Zárva');
+        }
+        
+        function showAddress() {
+            alert('Cím: Békéscsaba\n\nNavigáció indítása?');
+        }
+        
+        function requestService() {
+            if (confirm('Szerviz időpont foglalása?\n\n📞 Hívás: +36 20 804 8666\n🕐 Nyitvatartás: H-P 8:00-16:30\n\nTelefonálás most?')) {
+                window.location.href = 'tel:+36208048666';
+            }
+        }
+        
+        function requestInspection() {
+            if (confirm('Műszaki vizsga időpont?\n\n📞 Hívás: +36 20 804 8666\n🕐 Nyitvatartás: H-P 8:00-16:30\n\nTelefonálás most?')) {
+                window.location.href = 'tel:+36208048666';
+            }
+        }
+        
+        function requestCallback() {
+            if (confirm('Visszahívás kérése?\n\n📞 Telefonszám: +36 20 804 8666\n✉️ Email: ugyfelszolgalat@autodual.hu\n\nVálassz kapcsolatfelvételi módot:')) {
+                const choice = prompt('Írj "T" a telefonhíváshoz vagy "E" az emailhez:');
+                if (choice?.toLowerCase() === 't') {
+                    window.location.href = 'tel:+36208048666';
+                } else if (choice?.toLowerCase() === 'e') {
+                    window.location.href = 'mailto:ugyfelszolgalat@autodual.hu?subject=Visszahívás kérése';
+                }
+            }
+        }
+        
+        function showDirections() {
+            const userAgent = navigator.userAgent;
+            const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+            const isAndroid = /Android/.test(userAgent);
+            
+            if (isIOS) {
+                window.open('maps://maps.apple.com/?q=Autó+Dual+Békéscsaba', '_blank');
+            } else if (isAndroid) {
+                window.open('google.navigation:q=Autó+Dual+Békéscsaba', '_blank');
+            } else {
+                window.open('https://www.google.com/maps/search/Autó+Dual+Békéscsaba', '_blank');
+            }
+        }
+        
+        // Modal bezárás kattintásra
+        window.onclick = function(event) {
+            const modal = document.getElementById('infoModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Képek betöltése és fallback kezelés
+        document.addEventListener('DOMContentLoaded', function() {
+            const buildings = document.querySelectorAll('.building, .gate');
+            
+            buildings.forEach(building => {
+                const img = building.querySelector('.building-image');
+                const overlay = building.querySelector('.building-overlay');
+                
+                if (img) {
+                    // Próbáljuk betölteni a képet
+                    img.onload = function() {
+                        this.style.display = 'block';
+                        building.style.padding = '0';
+                    };
+                    
+                    img.onerror = function() {
+                        // Ha a kép nem töltődik be, használjuk a fallback dizájnt
+                        this.style.display = 'none';
+                        building.classList.add('no-image');
+                        building.style.padding = '16px 12px';
+                        building.style.display = 'flex';
+                        building.style.flexDirection = 'column';
+                        building.style.justifyContent = 'center';
+                        building.style.alignItems = 'center';
+                        
+                        // Overlay tartalmát közvetlenül a buildingbe tesszük
+                        if (overlay) {
+                            const title = overlay.querySelector('.building-title');
+                            const subtitle = overlay.querySelector('.building-subtitle');
+                            
+                            building.innerHTML = `
+                                <div style="font-size: 11px; font-weight: 700; margin-bottom: 3px;">
+                                    ${title ? title.textContent : ''}
+                                </div>
+                                <div style="font-size: 9px; opacity: 0.9;">
+                                    ${subtitle ? subtitle.textContent : ''}
+                                </div>
+                            `;
+                        }
+                    };
+                    
+                    // Indítjuk a betöltést
+                    img.src = img.src;
+                }
+            });
+            
+            // Touch optimalizálás
+            buildings.forEach(element => {
+                element.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const buildingType = this.getAttribute('onclick');
+                    if (buildingType) {
+                        const match = buildingType.match(/showInfo\('(.+?)'\)/);
+                        if (match) {
+                            showInfo(match[1]);
+                        }
+                    }
+                });
+                
+                element.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '0.8';
+                    this.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                element.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
+                    
+                    // Trigger the appropriate function
+                    const buildingType = this.getAttribute('onclick');
+                    if (buildingType) {
+                        const match = buildingType.match(/showInfo\('(.+?)'\)/);
+                        if (match) {
+                            showInfo(match[1]);
+                        }
+                    }
+                }, { passive: false });
+            });
+            
+            // Contact items
+            const contactItems = document.querySelectorAll('.contact-item');
+            contactItems.forEach(element => {
+                element.addEventListener('touchstart', function() {
+                    this.style.opacity = '0.8';
+                });
+                element.addEventListener('touchend', function() {
+                    this.style.opacity = '1';
+                });
+            });
+        });
+    </script>
+</body>
 </html>
-
