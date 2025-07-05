@@ -1,12 +1,4 @@
-.commercial-park {
-                width: 120px;
-                height: 100px;
-            }
-            
-            .inspection-building {
-                width: 70px;
-                height: 75px;
-            }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
@@ -120,6 +112,54 @@
             }
         }
         
+        /* Utak */
+        .road {
+            position: absolute;
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            border-radius: 2px;
+            opacity: 0.6;
+            box-shadow: 
+                0 2px 8px rgba(0,0,0,0.1),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+        
+        .road-horizontal {
+            height: 8px;
+        }
+        
+        .road-vertical {
+            width: 8px;
+        }
+        
+        .road-main {
+            width: 600px;
+            height: 12px;
+            top: 200px;
+            left: 50px;
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        }
+        
+        .road-side1 {
+            width: 8px;
+            height: 80px;
+            top: 120px;
+            left: 150px;
+        }
+        
+        .road-side2 {
+            width: 8px;
+            height: 100px;
+            top: 200px;
+            left: 220px;
+        }
+        
+        .road-side3 {
+            width: 8px;
+            height: 120px;
+            top: 200px;
+            left: 490px;
+        }
+        
         .building {
             position: absolute;
             border-radius: 16px;
@@ -173,17 +213,12 @@
         
         .building.has-image .building-text {
             position: relative;
-            bottom: auto;
-            left: auto;
-            right: auto;
             background: transparent;
             color: var(--dark-text);
             padding: 6px 4px;
-            border-radius: 0;
             font-size: 10px;
             font-weight: 600;
             text-align: center;
-            box-shadow: none;
             line-height: 1;
             height: 40%;
             display: flex;
@@ -224,8 +259,8 @@
         /* Szerviz - bal felül */
         .service-building {
             width: 90px;
-            height: 70px;
-            background: var(--dark-text);
+            height: 90px;
+            background: transparent;
             top: 60px;
             left: 10px;
         }
@@ -239,16 +274,16 @@
             left: 180px;
         }
         
-        /* Műszaki vizsga - főépület FELETT */
+        /* Eredetiségvizsgálat - főépület FELETT */
         .inspection-building {
-            width: 80px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--secondary-text) 0%, #6b7280 50%, #4b5563 100%);
+            width: 90px;
+            height: 90px;
+            background: transparent;
             top: 80px;
             left: 180px;
         }
         
-        /* Haszongépjármű park - még nagyobb méret */
+        /* Haszongépjármű park - jobbra */
         .commercial-park {
             width: 150px;
             height: 110px;
@@ -294,16 +329,186 @@
                 inset 0 2px 0 rgba(255,255,255,0.4);
         }
         
-        /* Fallback (háttérszín) ha nincs kép */
-        .building.no-image {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 16px 12px;
+        .gate .building-title {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 2px;
+            color: var(--white);
+            line-height: 1.1;
         }
         
-        .you-are-here {
+        .gate .building-subtitle {
+            font-size: 9px;
+            opacity: 0.9;
+            color: var(--white);
+            line-height: 1.1;
+        }
+        
+        /* Autó ikonok */
+        .car-icon {
+            position: absolute;
+            font-size: 16px;
+            z-index: 10;
+            animation: drive 8s linear infinite;
+        }
+        
+        .car-1 {
+            top: 198px;
+            left: 100px;
+        }
+        
+        .car-2 {
+            top: 198px;
+            left: 400px;
+        }
+        
+        .car-3 {
+            top: 198px;
+            left: 300px;
+            animation-delay: -3s;
+        }
+        
+        @keyframes drive {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(200px); }
+            100% { transform: translateX(0); }
+        }
+        
+        /* Zoom funkció */
+        .map-content {
+            position: relative;
+            width: 700px;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, transform-origin 0.3s ease;
+            transform-origin: center center;
+        }
+        
+        .map-content.zoomed {
+            transform: scale(1.5);
+        }
+        
+        .zoom-controls {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 20;
+        }
+        
+        .zoom-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.95);
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary);
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .zoom-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .zoom-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Részletes nézet */
+        .building-detail {
+            position: absolute;
+            background: rgba(255,255,255,0.95);
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 12px;
+            min-width: 200px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+            z-index: 30;
+            display: none;
+            backdrop-filter: blur(20px);
+        }
+        
+        .building-detail.active {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .building-detail h4 {
+            color: var(--primary);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .building-detail p {
+            font-size: 12px;
+            color: var(--secondary-text);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .building-detail .status {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        .status.open {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+        
+        .status.closed {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+        
+        .detail-close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 20px;
+            height: 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--secondary-text);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .detail-close:hover {
+            background: var(--light-gray);
+        }
             position: absolute;
             bottom: 80px;
             left: 120px;
@@ -602,6 +807,11 @@
                 height: 85px;
             }
             
+            .commercial-park {
+                width: 120px;
+                height: 100px;
+            }
+            
             .building.has-image .building-title {
                 font-size: 9px;
             }
@@ -638,47 +848,70 @@
         
         <!-- Map -->
         <div class="map-container">
-            <div class="map-content">
+            <div class="map-content" id="mapContent">
+                <!-- Zoom Controls -->
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomIn()">+</button>
+                    <button class="zoom-btn" onclick="zoomOut()">−</button>
+                </div>
+                
+                <!-- Utak -->
+                <div class="road road-main"></div>
+                <div class="road road-vertical road-side1"></div>
+                <div class="road road-vertical road-side2"></div>
+                <div class="road road-vertical road-side3"></div>
+                
+                <!-- Autó ikonok -->
+                <div class="car-icon car-1">🚗</div>
+                <div class="car-icon car-2">🚙</div>
+                <div class="car-icon car-3">🚐</div>
+                
                 <!-- Kapu - lent balra -->
-                <div class="gate">
+                <div class="gate" data-building="gate">
                     <div class="building-title">🚪 KAPU</div>
                     <div class="building-subtitle">Bejárat</div>
                 </div>
                 
                 <!-- Főépület - középen -->
-                <div class="building main-building has-image">
+                <div class="building main-building has-image" data-building="main">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">FŐÉPÜLET</div>
+                        <div class="building-title">🏢 FŐÉPÜLET</div>
                         <div class="building-subtitle">Értékesítés • Hitel</div>
                     </div>
                 </div>
                 
                 <!-- Szerviz - balra -->
-                <div class="building service-building has-image">
+                <div class="building service-building has-image" data-building="service">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">SZERVIZ</div>
+                        <div class="building-title">🔧 SZERVIZ</div>
                         <div class="building-subtitle">Javítás</div>
                     </div>
                 </div>
                 
                 <!-- Eredetiségvizsgálat - főépület felett -->
-                <div class="building inspection-building has-image">
+                <div class="building inspection-building has-image" data-building="inspection">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">EREDETISÉG-</div>
+                        <div class="building-title">📋 EREDETISÉG-</div>
                         <div class="building-subtitle">VIZSGÁLAT</div>
                     </div>
                 </div>
                 
                 <!-- Haszongépjármű park - jobbra -->
-                <div class="building commercial-park has-image">
+                <div class="building commercial-park has-image" data-building="commercial">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">HASZON-</div>
+                        <div class="building-title">🚛 HASZON-</div>
                         <div class="building-subtitle">GÉPJÁRMŰ</div>
                     </div>
+                </div>
+                
+                <!-- Részletes nézet panel -->
+                <div class="building-detail" id="buildingDetail">
+                    <button class="detail-close" onclick="closeDetail()">×</button>
+                    <div id="detailContent"></div>
                 </div>
                 
                 <div class="distance-badge distance-1">120m</div>
@@ -784,7 +1017,103 @@
     </div>
     
     <script>
+        const buildingDetails = {
+            gate: {
+                title: "🚪 Kapu",
+                hours: "Mindig nyitva",
+                info: "Főbejárat",
+                status: "open"
+            },
+            main: {
+                title: "🏢 Főépület", 
+                hours: "H-P: 9:00-18:00",
+                info: "Értékesítés, Hitel",
+                status: "open"
+            },
+            service: {
+                title: "🔧 Szerviz",
+                hours: "H-P: 8:00-16:30", 
+                info: "Javítás, Karbantartás",
+                status: "open"
+            },
+            inspection: {
+                title: "📋 Eredetiségvizsgálat",
+                hours: "H-P: 8:00-16:30",
+                info: "Gyors ügyintézés", 
+                status: "open"
+            },
+            commercial: {
+                title: "🚛 Haszongépjármű",
+                hours: "H-P: 9:00-18:00",
+                info: "Kisteherautók, Furgonok",
+                status: "open"
+            }
         const buildingInfo = {
+            gate: {
+                title: "🚪 Bejárat",
+                content: "Főbejárat a telephelyre.<br><br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!"
+            },
+            main: {
+                title: "🏢 Főépület",
+                content: "Itt találhatók az értékesítők és hitelügyintézők.<br><br>📞 Telefon: +36 20 804 8666<br>🕐 Nyitva: H-P 9:00-18:00, Szo 9:00-16:00<br><br>💡 <strong>Minden információ itt!</strong>"
+            },
+            service: {
+                title: "🔧 Szerviz",
+                content: "Professzionális autójavítás és karbantartás.<br><br>📞 Szerviz: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>⚙️ Teljes körű szerviz szolgáltatás"
+            },
+            inspection: {
+                title: "📋 Eredetiségvizsgálat",
+                content: "Eredetiségvizsgálat.<br><br>📞 Eredetiségvizsgálat: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>📄 Gyors ügyintézés"
+            },
+            commercial: {
+                title: "🚛 Haszongépjármű Park",
+                content: "Kisteherautók, furgonok és haszongépjárművek.<br><br>📍 120 méter a főépülettől lefelé"
+            }
+        };
+        
+        let isZoomed = false;
+        
+        function zoomIn() {
+            const mapContent = document.getElementById('mapContent');
+            mapContent.classList.add('zoomed');
+            isZoomed = true;
+        }
+        
+        function zoomOut() {
+            const mapContent = document.getElementById('mapContent');
+            mapContent.classList.remove('zoomed');
+            isZoomed = false;
+        }
+        
+        function showDetail(buildingType, element) {
+            const detail = document.getElementById('buildingDetail');
+            const content = document.getElementById('detailContent');
+            const info = buildingDetails[buildingType];
+            
+            const rect = element.getBoundingClientRect();
+            const containerRect = element.closest('.map-container').getBoundingClientRect();
+            
+            content.innerHTML = `
+                <h4>${info.title}</h4>
+                <p>⏰ ${info.hours}</p>
+                <p>ℹ️ ${info.info}</p>
+                <span class="status ${info.status}">${info.status === 'open' ? '🟢 Nyitva' : '🔴 Zárva'}</span>
+            `;
+            
+            detail.style.left = (rect.left - containerRect.left + 20) + 'px';
+            detail.style.top = (rect.top - containerRect.top - 100) + 'px';
+            detail.classList.add('active');
+            
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                closeDetail();
+            }, 5000);
+        }
+        
+        function closeDetail() {
+            const detail = document.getElementById('buildingDetail');
+            detail.classList.remove('active');
+        }
             gate: {
                 title: "🚪 Bejárat",
                 content: "Főbejárat a telephelyre.<br><br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!"
@@ -889,58 +1218,60 @@
             }
         }
         
-        // Touch optimalizálás és automatikus felugró javítás
+        // Épületek kattintás kezelése
         document.addEventListener('DOMContentLoaded', function() {
-            const buildings = document.querySelectorAll('.building, .gate');
-            
-            // Épület típus mapping
-            const buildingTypes = {
-                'gate': 'gate',
-                'main-building': 'main',
-                'service-building': 'service',
-                'inspection-building': 'inspection',
-                'commercial-park': 'commercial'
-            };
+            const buildings = document.querySelectorAll('[data-building]');
             
             buildings.forEach(building => {
-                // Épület típus meghatározása a CSS osztályok alapján
-                let buildingType = null;
-                for (const [className, type] of Object.entries(buildingTypes)) {
-                    if (building.classList.contains(className)) {
-                        buildingType = type;
-                        break;
-                    }
-                }
+                const buildingType = building.getAttribute('data-building');
                 
-                if (buildingType) {
-                    // Click esemény
-                    building.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
+                // Click esemény - dupla kattintás a részletes nézethez
+                let clickCount = 0;
+                building.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    clickCount++;
+                    
+                    if (clickCount === 1) {
+                        // Első kattintás - részletes nézet
+                        showDetail(buildingType, this);
+                        
+                        setTimeout(() => {
+                            if (clickCount === 1) {
+                                clickCount = 0;
+                            }
+                        }, 300);
+                    } else if (clickCount === 2) {
+                        // Második kattintás - modal megnyitása
+                        clickCount = 0;
+                        closeDetail();
                         showInfo(buildingType);
-                    });
+                    }
+                });
+                
+                // Touch események
+                building.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    this.style.opacity = '0.8';
+                    this.style.transform = 'scale(0.95)';
+                }, { passive: false });
+                
+                building.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
                     
-                    // Touch események
-                    building.addEventListener('touchstart', function(e) {
-                        e.preventDefault();
-                        this.style.opacity = '0.8';
-                        this.style.transform = 'scale(0.95)';
-                    }, { passive: false });
-                    
-                    building.addEventListener('touchend', function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.style.opacity = '1';
-                        this.style.transform = 'scale(1)';
-                        showInfo(buildingType);
-                    }, { passive: false });
-                    
-                    // Touchcancel esemény
-                    building.addEventListener('touchcancel', function(e) {
-                        this.style.opacity = '1';
-                        this.style.transform = 'scale(1)';
-                    }, { passive: false });
-                }
+                    // Touch-nál mindig részletes nézet
+                    showDetail(buildingType, this);
+                }, { passive: false });
+                
+                // Touchcancel esemény
+                building.addEventListener('touchcancel', function(e) {
+                    this.style.opacity = '1';
+                    this.style.transform = 'scale(1)';
+                }, { passive: false });
             });
             
             // Contact items
