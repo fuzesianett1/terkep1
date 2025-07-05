@@ -309,10 +309,9 @@
         }
         
         .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
         }
         
         .contact-item {
@@ -322,15 +321,17 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
-            flex-basis: calc(50% - 6px);
+            border: 2px solid transparent;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            min-height: 90px;
         }
         
         .contact-item:hover {
             background: #fef7f6;
+            border-color: #ED4638;
         }
         
         .contact-item .icon {
@@ -449,14 +450,52 @@
     <script>
         function showInfo(building) {
             var data = {
-                'main': 'Főépület - Értékesítés és hitelügyintézés',
-                'service': 'Szerviz - Autójavítás és karbantartás',
-                'inspection': 'Eredetiségvizsgálat - Gyors ügyintézés',
-                'commercial': 'Haszongépjármű park - Kisteherautók és furgonok',
-                'gate': 'Bejárat - Főkapu a telephelyre'
+                'main': {
+                    title: '🏢 Főépület',
+                    content: 'Itt találhatók az értékesítők és hitelügyintézők.\n\n📞 Telefon: +36 20 804 8666\n🕐 Nyitva: H-P 9:00-18:00, Szo 9:00-16:00\n\n💡 Minden információ itt!'
+                },
+                'service': {
+                    title: '🔧 Szerviz',
+                    content: 'Professzionális autójavítás és karbantartás.\n\n📞 Szerviz: +36 20 804 8666\n🕐 Nyitva: H-P 8:00-16:30\n\n⚙️ Teljes körű szerviz szolgáltatás'
+                },
+                'inspection': {
+                    title: '📋 Eredetiségvizsgálat',
+                    content: 'Eredetiségvizsgálat.\n\n📞 Eredetiségvizsgálat: +36 20 804 8666\n🕐 Nyitva: H-P 8:00-16:30\n\n📄 Gyors ügyintézés'
+                },
+                'commercial': {
+                    title: '🚛 Haszongépjármű Park',
+                    content: 'Kisteherautók, furgonok és haszongépjárművek.\n\n📍 120 méter a főépülettől lefelé'
+                },
+                'gate': {
+                    title: '🚪 Bejárat',
+                    content: 'Főbejárat a telephelyre.\n\n🏢 Főépület középen\n\n📍 Tájékozódás: kövesse a táblákat!'
+                }
             };
             
-            alert(data[building] || 'Épület információ');
+            var info = data[building];
+            if (info) {
+                alert(info.title + '\n\n' + info.content);
+            }
+        }
+        
+        function openHours() {
+            alert('Nyitvatartás:\n\n🏢 Főépület: H-P 9:00-18:00, Szo 9:00-16:00\n🔧 Szerviz: H-P 8:00-16:30\n📋 Eredetiségvizsgálat: H-P 8:00-16:30\n\nVasárnap: Zárva');
+        }
+        
+        function callPhone() {
+            if (confirm('Hívás indítása: +36 20 804 8666?')) {
+                window.location.href = 'tel:+36208048666';
+            }
+        }
+        
+        function showEmail() {
+            if (confirm('Email küldése: ugyfelszolgalat@autodual.hu?')) {
+                window.location.href = 'mailto:ugyfelszolgalat@autodual.hu';
+            }
+        }
+        
+        function showAddress() {
+            alert('Cím: Békéscsaba\n\nNavigáció indítása?');
         }
     </script>
 </body>
