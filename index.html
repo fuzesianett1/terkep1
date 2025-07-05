@@ -1,40 +1,9 @@
-<!-- Épületek -->
-                <div class="building main-building has-image" onclick="showInfo('main')">
-                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
-                    <div class="building-text">
-                        <div class="building-title">FŐÉPÜLET</div>
-                        <div class="building-subtitle">Értékesítés • Hitel</div>
-                    </div>
-                </div>
-                
-                <div class="building service-building has-image" onclick="showInfo('service')">
-                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
-                    <div class="building-text">
-                        <div class="building-title">SZERVIZ</div>
-                        <div class="building-subtitle">Javítás</div>
-                    </div>
-                </div>
-                
-                <div class="building inspection-building has-image" onclick="showInfo('inspection')">
-                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
-                    <div class="building-text">
-                        <div class="building-title">EREDETISÉG-</div>
-                        <div class="building-subtitle">VIZSGÁLAT</div>
-                    </div>
-                </div>
-                
-                <div class="building commercial-park has-image" onclick="showInfo('commercial')">
-                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
-                    <div class="building-text">
-                        <div class="building-title">HASZON-</div>
-                        <div class="building-subtitle">GÉPJÁRMŰ</div>
-                    </div>
-                </div><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autókereskedés Térkép</title>
+    <title>Autókereskedés Térkép - Tiszta</title>
     <style>
         * {
             margin: 0;
@@ -87,42 +56,22 @@
             background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
         
-        /* ITT ÁLL ÖN - normális méret */
-        .you-are-here {
-            position: absolute;
-            bottom: 50px;
-            left: 140px;
-            background: #ED4638;
-            color: white;
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 9px;
-            font-weight: 600;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-6px); }
-            60% { transform: translateY(-3px); }
-        }
-        
-        /* Főút a kapu előtt */
+        /* Főút */
         .road-main {
+            position: absolute;
             width: 600px;
             height: 15px;
             bottom: 10px;
             left: 20px;
-            position: absolute;
             background: #6b7280;
             border-radius: 3px;
         }
         
-        /* Kapu grafikus elem */
+        /* Kapu */
         .gate-visual {
             position: absolute;
-            bottom: 70px;
-            left: 150px;
+            bottom: 90px;
+            left: 190px;
             width: 20px;
             height: 4px;
             background: #374151;
@@ -151,11 +100,10 @@
             border-radius: 2px;
         }
         
-        /* Kapu tábla */
         .gate-sign {
             position: absolute;
-            bottom: 35px;
-            left: 130px;
+            bottom: 70px;
+            left: 170px;
             width: 60px;
             height: 20px;
             background: rgba(255,255,255,0.9);
@@ -168,6 +116,26 @@
             font-size: 8px;
             font-weight: 600;
             color: #333;
+        }
+        
+        /* ITT ÁLL ÖN */
+        .you-are-here {
+            position: absolute;
+            bottom: 100px;
+            left: 180px;
+            background: #ED4638;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 9px;
+            font-weight: 600;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            60% { transform: translateY(-3px); }
         }
         
         /* Autók */
@@ -199,6 +167,67 @@
             100% { transform: translateX(0); }
         }
         
+        /* Utak */
+        .road-from-gate {
+            position: absolute;
+            width: 8px;
+            height: 80px;
+            bottom: 90px;
+            left: 196px;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-crossroad {
+            position: absolute;
+            width: 60px;
+            height: 8px;
+            top: 200px;
+            left: 160px;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-to-service {
+            position: absolute;
+            width: 8px;
+            height: 140px;
+            top: 60px;
+            left: 50px;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-to-inspection {
+            position: absolute;
+            width: 8px;
+            height: 80px;
+            top: 120px;
+            left: 224px;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-to-main {
+            position: absolute;
+            width: 8px;
+            height: 40px;
+            top: 160px;
+            left: 224px;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-main-to-service {
+            position: absolute;
+            width: 130px;
+            height: 8px;
+            top: 200px;
+            left: 50px;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
         /* Épületek */
         .building {
             position: absolute;
@@ -206,22 +235,20 @@
             cursor: pointer;
             transition: all 0.3s ease;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: transparent;
         }
         
         .building:hover {
             transform: translateY(-4px) scale(1.05);
         }
         
-        .building.has-image {
-            background: transparent;
-            display: flex;
-            flex-direction: column;
-        }
-        
         .building-image {
             width: 100%;
             height: 70%;
             object-fit: contain;
+            background: transparent;
         }
         
         .building-text {
@@ -231,6 +258,7 @@
             justify-content: center;
             align-items: center;
             text-align: center;
+            background: transparent;
         }
         
         .building-title {
@@ -245,7 +273,7 @@
             color: #868D98;
         }
         
-        /* Épület pozíciók */
+        /* Épület pozíciók - CSAK EZEK */
         .main-building {
             width: 120px;
             height: 90px;
@@ -274,80 +302,17 @@
             left: 450px;
         }
         
-        /* Utak */
-        .road-from-gate {
-            width: 8px;
-            height: 80px;
-            bottom: 70px;
-            left: 156px;
-            position: absolute;
-            background: #9ca3af;
-            border-radius: 2px;
-        }
-        
-        /* Keresztút - rövidebb, csak a főépület és eredetiségvizsgálat felé */
-        .road-crossroad {
-            width: 60px;
-            height: 8px;
-            top: 200px;
-            left: 160px;
-            position: absolute;
-            background: #9ca3af;
-            border-radius: 2px;
-        }
-        
-        /* Út a szervizhez - egyenesen felülről, mint az eredetiségvizsgálat */
-        .road-to-service {
-            width: 8px;
-            height: 140px;
-            top: 60px;
-            left: 50px;
-            position: absolute;
-            background: #9ca3af;
-            border-radius: 2px;
-        }
-        
-        .road-to-inspection {
-            width: 8px;
-            height: 80px;
-            top: 120px;
-            left: 224px;
-            position: absolute;
-            background: #9ca3af;
-            border-radius: 2px;
-        }
-        
-        .road-to-main {
-            width: 8px;
-            height: 40px;
-            top: 160px;
-            left: 224px;
-            position: absolute;
-            background: #9ca3af;
-            border-radius: 2px;
-        }
-        
-        /* Összekötő út a főépület és szerviz között */
-        .road-main-to-service {
-            width: 130px;
-            height: 8px;
-            top: 200px;
-            left: 50px;
-            position: absolute;
-            background: #9ca3af;
-            border-radius: 2px;
-        }
-        
+        /* Kontakt */
         .info-panel {
             padding: 24px;
             background: white;
         }
         
         .contact-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            align-items: stretch;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
         }
         
         .contact-item {
@@ -357,11 +322,11 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
+            flex-basis: calc(50% - 6px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 80px;
         }
         
         .contact-item:hover {
@@ -407,18 +372,18 @@
                 
                 <!-- Kapu -->
                 <div class="gate-visual"></div>
-                <div class="gate-sign">BEJÁRAT</div>
+                <div class="gate-sign" onclick="showInfo('gate')">BEJÁRAT</div>
+                
+                <!-- ITT ÁLL ÖN -->
+                <div class="you-are-here">📍 ITT ÁLL ÖN</div>
                 
                 <!-- Autók -->
                 <div class="car-icon car-1">🚗</div>
                 <div class="car-icon car-2">🚙</div>
                 <div class="car-icon car-3">🚐</div>
                 
-                <!-- ITT ÁLL ÖN - NAGY PIROS -->
-                <div class="you-are-here">📍 ITT ÁLL ÖN</div>
-                
-                <!-- Épületek -->
-                <div class="building main-building has-image">
+                <!-- ÉPÜLETEK - PONTOSAN 4 DARAB -->
+                <div class="building main-building" onclick="showInfo('main')">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
                     <div class="building-text">
                         <div class="building-title">FŐÉPÜLET</div>
@@ -426,7 +391,7 @@
                     </div>
                 </div>
                 
-                <div class="building service-building has-image">
+                <div class="building service-building" onclick="showInfo('service')">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
                     <div class="building-text">
                         <div class="building-title">SZERVIZ</div>
@@ -434,7 +399,7 @@
                     </div>
                 </div>
                 
-                <div class="building inspection-building has-image">
+                <div class="building inspection-building" onclick="showInfo('inspection')">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
                     <div class="building-text">
                         <div class="building-title">EREDETISÉG-</div>
@@ -442,7 +407,7 @@
                     </div>
                 </div>
                 
-                <div class="building commercial-park has-image">
+                <div class="building commercial-park" onclick="showInfo('commercial')">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
                     <div class="building-text">
                         <div class="building-title">HASZON-</div>
@@ -483,7 +448,15 @@
     
     <script>
         function showInfo(building) {
-            alert('Épület információ: ' + building);
+            var data = {
+                'main': 'Főépület - Értékesítés és hitelügyintézés',
+                'service': 'Szerviz - Autójavítás és karbantartás',
+                'inspection': 'Eredetiségvizsgálat - Gyors ügyintézés',
+                'commercial': 'Haszongépjármű park - Kisteherautók és furgonok',
+                'gate': 'Bejárat - Főkapu a telephelyre'
+            };
+            
+            alert(data[building] || 'Épület információ');
         }
     </script>
 </body>
