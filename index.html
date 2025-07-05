@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Autókereskedés Térkép</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,54 +11,37 @@
             box-sizing: border-box;
         }
         
-        :root {
-            --primary: #ED4638;
-            --white: #FFFFFF;
-            --light-gray: #F3F4F6;
-            --dark-text: #333333;
-            --secondary-text: #868D98;
-            --shadow: rgba(0,0,0,0.1);
-        }
-        
         body {
-            font-family: 'Montserrat', sans-serif;
-            background: var(--light-gray);
-            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
             padding: 16px;
-            color: var(--dark-text);
         }
         
         .container {
             max-width: 450px;
             margin: 0 auto;
-            background: var(--white);
+            background: white;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 20px var(--shadow);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
         
         .header {
-            background: var(--primary);
+            background: #ED4638;
             padding: 24px 20px;
             text-align: center;
-            color: var(--white);
+            color: white;
         }
         
         .header h1 {
             font-size: 20px;
-            font-weight: 700;
             margin-bottom: 6px;
-        }
-        
-        .header p {
-            font-size: 14px;
-            opacity: 0.9;
         }
         
         .map-container {
             position: relative;
             height: 400px;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             margin: 15px;
             border-radius: 24px;
             overflow-x: auto;
@@ -71,76 +53,93 @@
             position: relative;
             width: 700px;
             height: 100%;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 30%, #f1f5f9 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
         }
         
-        /* Főút a kapu előtt - hosszabb */
+        /* ITT ÁLL ÖN - normális méret */
+        .you-are-here {
+            position: absolute;
+            bottom: 50px;
+            left: 140px;
+            background: #ED4638;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 16px;
+            font-size: 9px;
+            font-weight: 600;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-6px); }
+            60% { transform: translateY(-3px); }
+        }
+        
+        /* Főút a kapu előtt */
         .road-main {
             width: 600px;
             height: 15px;
             bottom: 10px;
             left: 20px;
             position: absolute;
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+            background: #6b7280;
             border-radius: 3px;
         }
         
-        /* Főút a kaputól felfelé */
-        .road-from-gate {
-            width: 8px;
-            height: 80px;
+        /* Kapu grafikus elem */
+        .gate-visual {
+            position: absolute;
             bottom: 70px;
-            left: 156px;
-            position: absolute;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            left: 150px;
+            width: 20px;
+            height: 4px;
+            background: #374151;
             border-radius: 2px;
         }
         
-        /* Keresztút (T-elágazás) - rövidebb, nem megy a haszongépjármű felé */
-        .road-crossroad {
-            width: 200px;
-            height: 8px;
-            top: 200px;
-            left: 100px;
+        .gate-visual::before {
+            content: '';
             position: absolute;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            left: -2px;
+            top: -4px;
+            width: 4px;
+            height: 12px;
+            background: #374151;
             border-radius: 2px;
         }
         
-        /* Út a szervizhez */
-        .road-to-service {
-            width: 8px;
-            height: 60px;
-            top: 100px;
-            left: 120px;
+        .gate-visual::after {
+            content: '';
             position: absolute;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
+            right: -2px;
+            top: -4px;
+            width: 4px;
+            height: 12px;
+            background: #374151;
             border-radius: 2px;
         }
         
-        /* Út az eredetiségvizsgálathoz */
-        .road-to-inspection {
-            width: 8px;
-            height: 80px;
-            top: 120px;
-            left: 224px;
+        /* Kapu tábla */
+        .gate-sign {
             position: absolute;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-            border-radius: 2px;
+            bottom: 35px;
+            left: 130px;
+            width: 60px;
+            height: 20px;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid #868D98;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 8px;
+            font-weight: 600;
+            color: #333;
         }
         
-        /* Út a főépülethez */
-        .road-to-main {
-            width: 8px;
-            height: 40px;
-            top: 160px;
-            left: 224px;
-            position: absolute;
-            background: linear-gradient(135deg, #9ca3af 0%, #6b7280 100%);
-            border-radius: 2px;
-        }
-        
-        /* Autók a főúton */
+        /* Autók */
         .car-icon {
             position: absolute;
             font-size: 16px;
@@ -169,6 +168,7 @@
             100% { transform: translateX(0); }
         }
         
+        /* Épületek */
         .building {
             position: absolute;
             border-radius: 16px;
@@ -181,7 +181,6 @@
             transform: translateY(-4px) scale(1.05);
         }
         
-        /* Képes épületek */
         .building.has-image {
             background: transparent;
             display: flex;
@@ -207,12 +206,12 @@
             font-size: 10px;
             font-weight: 700;
             margin-bottom: 2px;
-            color: var(--dark-text);
+            color: #333;
         }
         
         .building-subtitle {
             font-size: 8px;
-            color: var(--secondary-text);
+            color: #868D98;
         }
         
         /* Épület pozíciók */
@@ -244,152 +243,89 @@
             left: 450px;
         }
         
-        /* Kapu tábla (kisebb) */
-        .gate-sign {
-            position: absolute;
-            bottom: 35px;
-            left: 130px;
-            width: 60px;
-            height: 20px;
-            background: rgba(255,255,255,0.9);
-            border: 1px solid var(--secondary-text);
-            border-radius: 4px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 8px;
-            font-weight: 600;
-            color: var(--dark-text);
-        }
-        
-        .gate-sign:hover {
-            background: rgba(255,255,255,1);
-            transform: scale(1.05);
-        }
-        
-        /* Kapu grafikus elem */
-        .gate-visual {
-            position: absolute;
+        /* Utak */
+        .road-from-gate {
+            width: 8px;
+            height: 80px;
             bottom: 70px;
-            left: 150px;
-            width: 20px;
-            height: 4px;
-            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-            border-radius: 2px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-        
-        .gate-visual::before {
-            content: '';
+            left: 156px;
             position: absolute;
-            left: -2px;
-            top: -4px;
-            width: 4px;
-            height: 12px;
-            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
+            background: #9ca3af;
             border-radius: 2px;
         }
         
-        .gate-visual::after {
-            content: '';
-            position: absolute;
-            right: -2px;
-            top: -4px;
-            width: 4px;
-            height: 12px;
-            background: linear-gradient(135deg, #374151 0%, #1f2937 100%);
-            border-radius: 2px;
-        }
-            position: absolute;
-            bottom: 80px;
-            left: 120px;
-            background: var(--primary);
-            color: var(--white);
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 9px;
-            font-weight: 600;
-            animation: bounce 2s infinite;
-        }
-        
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-            40% { transform: translateY(-6px); }
-            60% { transform: translateY(-3px); }
-        }
-        
-        .distance-badge {
-            position: absolute;
-            background: var(--white);
-            padding: 6px 10px;
-            border-radius: 16px;
-            font-size: 10px;
-            font-weight: 600;
-            color: var(--dark-text);
-            border: 2px solid var(--primary);
-            top: 190px;
-            left: 350px;
-        }
-        
-        .arrow {
-            position: absolute;
-            font-size: 16px;
-            color: var(--primary);
-            animation: float 2s ease-in-out infinite;
-            font-weight: bold;
+        .road-crossroad {
+            width: 130px;
+            height: 8px;
             top: 200px;
-            left: 390px;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-3px); }
-        }
-        
-        .scroll-hint {
+            left: 100px;
             position: absolute;
-            top: 15px;
-            right: 20px;
-            background: rgba(255,255,255,0.9);
-            color: var(--dark-text);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 600;
-            animation: pulse 3s infinite;
+            background: #9ca3af;
+            border-radius: 2px;
         }
         
-        @keyframes pulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+        .road-to-service {
+            width: 8px;
+            height: 100px;
+            top: 100px;
+            left: 120px;
+            position: absolute;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-to-inspection {
+            width: 8px;
+            height: 80px;
+            top: 120px;
+            left: 224px;
+            position: absolute;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        .road-to-main {
+            width: 8px;
+            height: 40px;
+            top: 160px;
+            left: 224px;
+            position: absolute;
+            background: #9ca3af;
+            border-radius: 2px;
+        }
+        
+        /* Oldalirányú út a főépülettől a szerviz vonaláig */
+        .road-main-to-service {
+            width: 120px;
+            height: 8px;
+            top: 200px;
+            left: 160px;
+            position: absolute;
+            background: #9ca3af;
+            border-radius: 2px;
         }
         
         .info-panel {
             padding: 24px;
-            background: var(--white);
+            background: white;
         }
         
         .contact-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 24px;
         }
         
         .contact-item {
             text-align: center;
             padding: 16px 12px;
-            background: var(--light-gray);
+            background: #f3f4f6;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
-            border: 2px solid transparent;
         }
         
         .contact-item:hover {
-            border-color: var(--primary);
             background: #fef7f6;
         }
         
@@ -401,206 +337,18 @@
         
         .contact-item .label {
             font-size: 12px;
-            color: var(--secondary-text);
+            color: #868D98;
             margin-bottom: 4px;
-            font-weight: 500;
         }
         
         .contact-item .value {
             font-size: 12px;
             font-weight: 600;
-            color: var(--dark-text);
-        }
-        
-        .legend {
-            margin-top: 24px;
-        }
-        
-        .legend h3 {
-            font-size: 16px;
-            margin-bottom: 12px;
-            color: var(--dark-text);
-            font-weight: 600;
-        }
-        
-        .legend-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            font-size: 12px;
-            color: var(--secondary-text);
-            padding: 8px;
-            background: var(--light-gray);
-            border-radius: 6px;
-            font-weight: 500;
-        }
-        
-        .legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-        
-        .quick-actions {
-            background: var(--white);
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px var(--shadow);
-        }
-        
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-        
-        .action-item {
-            background: var(--light-gray);
-            border: 2px solid transparent;
-            border-radius: 16px;
-            padding: 20px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .action-item:hover {
-            transform: translateY(-4px);
-            border-color: var(--primary);
-            background: #fef7f6;
-        }
-        
-        .action-icon {
-            font-size: 24px;
-            margin-bottom: 8px;
-            display: block;
-        }
-        
-        .action-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--dark-text);
-            margin-bottom: 4px;
-        }
-        
-        .action-subtitle {
-            font-size: 11px;
-            color: var(--secondary-text);
-            font-weight: 500;
-        }
-        
-        .demo-mode {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            background: var(--dark-text);
-            color: var(--white);
-            padding: 6px 12px;
-            border-radius: 16px;
-            font-size: 10px;
-            z-index: 1000;
-            font-weight: 500;
-        }
-        
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            background: var(--white);
-            margin: 20% auto;
-            padding: 24px;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 320px;
-            text-align: center;
-        }
-        
-        .modal-content h3 {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-        
-        .modal-content p {
-            color: var(--secondary-text);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        
-        .close {
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-            color: var(--secondary-text);
-        }
-        
-        .close:hover {
-            color: var(--primary);
-        }
-        
-        /* Mobil nézet */
-        @media (max-width: 480px) {
-            .container {
-                margin: 8px;
-                max-width: none;
-            }
-            
-            .map-container {
-                margin: 16px;
-                height: 350px;
-            }
-            
-            .main-building {
-                width: 100px;
-                height: 80px;
-            }
-            
-            .service-building,
-            .inspection-building {
-                width: 85px;
-                height: 85px;
-            }
-            
-            .commercial-park {
-                width: 120px;
-                height: 100px;
-            }
-            
-            .building-title {
-                font-size: 9px;
-            }
-            
-            .building-subtitle {
-                font-size: 7px;
-            }
-            
-            .action-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
+            color: #333;
         }
     </style>
 </head>
 <body>
-    <div class="demo-mode">DEMO</div>
-    
     <div class="container">
         <div class="header">
             <h1>🚗 Autó Dual Térkép</h1>
@@ -609,38 +357,29 @@
         
         <div class="map-container">
             <div class="map-content">
-                <!-- Főút a kapu előtt -->
+                <!-- Utak -->
                 <div class="road-main"></div>
-                
-                <!-- Út a kaputól felfelé -->
                 <div class="road-from-gate"></div>
-                
-                <!-- Keresztút (T-elágazás) -->
                 <div class="road-crossroad"></div>
-                
-                <!-- Oldalirányú út a főépülettől a szerviz vonaláig -->
-                <div class="road-main-to-service"></div>
-                
-                <!-- Utak az épületekhez -->
                 <div class="road-to-service"></div>
                 <div class="road-to-inspection"></div>
                 <div class="road-to-main"></div>
+                <div class="road-main-to-service"></div>
                 
-                <!-- Autók csak a főúton -->
+                <!-- Kapu -->
+                <div class="gate-visual"></div>
+                <div class="gate-sign">BEJÁRAT</div>
+                
+                <!-- Autók -->
                 <div class="car-icon car-1">🚗</div>
                 <div class="car-icon car-2">🚙</div>
                 <div class="car-icon car-3">🚐</div>
                 
-                <!-- Kapu grafikus elem -->
-                <div class="gate-visual"></div>
+                <!-- ITT ÁLL ÖN - NAGY PIROS -->
+                <div class="you-are-here">📍 ITT ÁLL ÖN</div>
                 
-                <!-- Kapu tábla (kisebb) -->
-                <div class="gate-sign" onclick="showInfo('gate')">
-                    <div class="building-title">BEJÁRAT</div>
-                </div>
-                
-                <!-- Főépület -->
-                <div class="building main-building has-image" onclick="showInfo('main')">
+                <!-- Épületek -->
+                <div class="building main-building has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
                     <div class="building-text">
                         <div class="building-title">FŐÉPÜLET</div>
@@ -648,8 +387,7 @@
                     </div>
                 </div>
                 
-                <!-- Szerviz -->
-                <div class="building service-building has-image" onclick="showInfo('service')">
+                <div class="building service-building has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
                     <div class="building-text">
                         <div class="building-title">SZERVIZ</div>
@@ -657,8 +395,7 @@
                     </div>
                 </div>
                 
-                <!-- Eredetiségvizsgálat -->
-                <div class="building inspection-building has-image" onclick="showInfo('inspection')">
+                <div class="building inspection-building has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
                     <div class="building-text">
                         <div class="building-title">EREDETISÉG-</div>
@@ -666,191 +403,43 @@
                     </div>
                 </div>
                 
-                <!-- Haszongépjármű -->
-                <div class="building commercial-park has-image" onclick="showInfo('commercial')">
+                <div class="building commercial-park has-image">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
                     <div class="building-text">
                         <div class="building-title">HASZON-</div>
                         <div class="building-subtitle">GÉPJÁRMŰ</div>
                     </div>
                 </div>
-                
-                <div class="distance-badge">120m</div>
-                <div class="arrow">→</div>
-                <div class="you-are-here-new">📍 ITT ÁLL ÖN</div>
-                <div class="scroll-hint">← Húzd balra a térképet!</div>
             </div>
         </div>
         
         <div class="info-panel">
             <div class="contact-info">
-                <div class="contact-item" onclick="openHours()">
+                <div class="contact-item">
                     <span class="icon">🕐</span>
                     <div class="label">Nyitva</div>
                     <div class="value">H-P: 9-18, Szo: 9-16</div>
                 </div>
                 
-                <div class="contact-item" onclick="showEmail()">
-                    <span class="icon">✉️</span>
-                    <div class="label">Email</div>
-                    <div class="value">ugyfelszolgalat@autodual.hu</div>
-                </div>
-                
-                <div class="contact-item" onclick="callPhone()">
+                <div class="contact-item">
                     <span class="icon">📞</span>
                     <div class="label">Telefon</div>
                     <div class="value">+36 20 804 8666</div>
                 </div>
                 
-                <div class="contact-item" onclick="showAddress()">
+                <div class="contact-item">
+                    <span class="icon">✉️</span>
+                    <div class="label">Email</div>
+                    <div class="value">ugyfelszolgalat@autodual.hu</div>
+                </div>
+                
+                <div class="contact-item">
                     <span class="icon">📍</span>
                     <div class="label">Cím</div>
                     <div class="value">Békéscsaba</div>
                 </div>
             </div>
-            
-            <div class="legend">
-                <h3>Épületek</h3>
-                <div class="legend-grid">
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: var(--primary);"></div>
-                        <span>Főépület</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: var(--dark-text);"></div>
-                        <span>Szerviz</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: var(--secondary-text);"></div>
-                        <span>Eredetiségvizsgálat</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color" style="background: var(--primary);"></div>
-                        <span>Haszongépjármű</span>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    
-    <div class="container" style="margin-top: 20px;">
-        <div class="quick-actions">
-            <h2 style="margin-bottom: 16px; font-size: 18px; font-weight: 600; text-align: center; color: var(--dark-text);">🎯 Gyors Műveletek</h2>
-            
-            <div class="action-grid">
-                <div class="action-item" onclick="requestService()">
-                    <div class="action-icon">🔧</div>
-                    <div class="action-title">Szerviz Időpont</div>
-                    <div class="action-subtitle">Foglalás</div>
-                </div>
-                
-                <div class="action-item" onclick="requestInspection()">
-                    <div class="action-icon">📋</div>
-                    <div class="action-title">Eredetiségvizsgálat</div>
-                    <div class="action-subtitle">Gyors ügyintézés</div>
-                </div>
-                
-                <div class="action-item" onclick="requestCallback()">
-                    <div class="action-icon">📞</div>
-                    <div class="action-title">Visszahívás</div>
-                    <div class="action-subtitle">Kérés</div>
-                </div>
-                
-                <div class="action-item" onclick="showDirections()">
-                    <div class="action-icon">🗺️</div>
-                    <div class="action-title">Útvonalterv</div>
-                    <div class="action-subtitle">Navigáció</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <div id="modalContent"></div>
-        </div>
-    </div>
-    
-    <script>
-        // Alapvető funkciók
-        function showInfo(building) {
-            var modal = document.getElementById('infoModal');
-            var content = document.getElementById('modalContent');
-            
-            var data = {
-                'gate': {
-                    title: '🚪 Bejárat',
-                    content: 'Főbejárat a telephelyre.<br><br>🏢 Főépület középen<br><br>📍 Tájékozódás: kövesse a táblákat!'
-                },
-                'main': {
-                    title: '🏢 Főépület',
-                    content: 'Itt találhatók az értékesítők és hitelügyintézők.<br><br>📞 Telefon: +36 20 804 8666<br>🕐 Nyitva: H-P 9:00-18:00, Szo 9:00-16:00<br><br>💡 <strong>Minden információ itt!</strong>'
-                },
-                'service': {
-                    title: '🔧 Szerviz',
-                    content: 'Professzionális autójavítás és karbantartás.<br><br>📞 Szerviz: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>⚙️ Teljes körű szerviz szolgáltatás'
-                },
-                'inspection': {
-                    title: '📋 Eredetiségvizsgálat',
-                    content: 'Eredetiségvizsgálat.<br><br>📞 Eredetiségvizsgálat: +36 20 804 8666<br>🕐 Nyitva: H-P 8:00-16:30<br><br>📄 Gyors ügyintézés'
-                },
-                'commercial': {
-                    title: '🚛 Haszongépjármű Park',
-                    content: 'Kisteherautók, furgonok és haszongépjárművek.<br><br>📍 120 méter a főépülettől lefelé'
-                }
-            };
-            
-            var info = data[building];
-            if (info) {
-                content.innerHTML = '<h3 style="margin-bottom: 15px;">' + info.title + '</h3><p>' + info.content + '</p>';
-                modal.style.display = 'block';
-            }
-        }
-        
-        function closeModal() {
-            document.getElementById('infoModal').style.display = 'none';
-        }
-        
-        function callPhone() {
-            window.location.href = 'tel:+36208048666';
-        }
-        
-        function showEmail() {
-            window.location.href = 'mailto:ugyfelszolgalat@autodual.hu';
-        }
-        
-        function openHours() {
-            alert('Nyitvatartás:\n\n🏢 Főépület: H-P 9:00-18:00, Szo 9:00-16:00\n🔧 Szerviz: H-P 8:00-16:30\n📋 Eredetiségvizsgálat: H-P 8:00-16:30\n\nVasárnap: Zárva');
-        }
-        
-        function showAddress() {
-            alert('Cím: Békéscsaba');
-        }
-        
-        function requestService() {
-            window.location.href = 'tel:+36208048666';
-        }
-        
-        function requestInspection() {
-            window.location.href = 'tel:+36208048666';
-        }
-        
-        function requestCallback() {
-            window.location.href = 'tel:+36208048666';
-        }
-        
-        function showDirections() {
-            window.open('https://www.google.com/maps/search/Autó+Dual+Békéscsaba', '_blank');
-        }
-        
-        // Modal bezárás
-        window.onclick = function(event) {
-            var modal = document.getElementById('infoModal');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
-        }
-    </script>
 </body>
 </html>
