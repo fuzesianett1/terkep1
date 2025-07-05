@@ -876,7 +876,7 @@
                 <div class="building main-building has-image" data-building="main">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">🏢 FŐÉPÜLET</div>
+                        <div class="building-title">FŐÉPÜLET</div>
                         <div class="building-subtitle">Értékesítés • Hitel</div>
                     </div>
                 </div>
@@ -885,7 +885,7 @@
                 <div class="building service-building has-image" data-building="service">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">🔧 SZERVIZ</div>
+                        <div class="building-title">SZERVIZ</div>
                         <div class="building-subtitle">Javítás</div>
                     </div>
                 </div>
@@ -894,7 +894,7 @@
                 <div class="building inspection-building has-image" data-building="inspection">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">📋 EREDETISÉG-</div>
+                        <div class="building-title">EREDETISÉG-</div>
                         <div class="building-subtitle">VIZSGÁLAT</div>
                     </div>
                 </div>
@@ -903,7 +903,7 @@
                 <div class="building commercial-park has-image" data-building="commercial">
                     <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
                     <div class="building-text">
-                        <div class="building-title">🚛 HASZON-</div>
+                        <div class="building-title">HASZON-</div>
                         <div class="building-subtitle">GÉPJÁRMŰ</div>
                     </div>
                 </div>
@@ -1225,29 +1225,18 @@
             buildings.forEach(building => {
                 const buildingType = building.getAttribute('data-building');
                 
-                // Click esemény - dupla kattintás a részletes nézethez
-                let clickCount = 0;
+                // Click esemény - egyszerű kattintás
                 building.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
                     
-                    clickCount++;
+                    // Részletes nézet bezárása ha nyitva van
+                    closeDetail();
                     
-                    if (clickCount === 1) {
-                        // Első kattintás - részletes nézet
-                        showDetail(buildingType, this);
-                        
-                        setTimeout(() => {
-                            if (clickCount === 1) {
-                                clickCount = 0;
-                            }
-                        }, 300);
-                    } else if (clickCount === 2) {
-                        // Második kattintás - modal megnyitása
-                        clickCount = 0;
-                        closeDetail();
+                    // Modal megnyitása
+                    setTimeout(() => {
                         showInfo(buildingType);
-                    }
+                    }, 100);
                 });
                 
                 // Touch események
@@ -1263,8 +1252,13 @@
                     this.style.opacity = '1';
                     this.style.transform = 'scale(1)';
                     
-                    // Touch-nál mindig részletes nézet
-                    showDetail(buildingType, this);
+                    // Részletes nézet bezárása ha nyitva van
+                    closeDetail();
+                    
+                    // Modal megnyitása
+                    setTimeout(() => {
+                        showInfo(buildingType);
+                    }, 100);
                 }, { passive: false });
                 
                 // Touchcancel esemény
@@ -1272,6 +1266,17 @@
                     this.style.opacity = '1';
                     this.style.transform = 'scale(1)';
                 }, { passive: false });
+                
+                // Hover esemény - részletes nézet
+                building.addEventListener('mouseenter', function(e) {
+                    showDetail(buildingType, this);
+                });
+                
+                building.addEventListener('mouseleave', function(e) {
+                    setTimeout(() => {
+                        closeDetail();
+                    }, 1000);
+                });
             });
             
             // Contact items
