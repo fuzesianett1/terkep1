@@ -351,12 +351,24 @@
         }
         
         .contact-item .value {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
             color: #333;
             word-wrap: break-word;
             text-align: center;
             line-height: 1.2;
+        }
+        
+        /* Mobil nézet */
+        @media (max-width: 480px) {
+            .contact-item .value {
+                font-size: 9px;
+            }
+            
+            .contact-item {
+                padding: 12px 8px;
+                min-height: 80px;
+            }
         }
     </style>
 </head>
