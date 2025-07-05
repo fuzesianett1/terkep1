@@ -1,4 +1,35 @@
-<!DOCTYPE html>
+<!-- Épületek -->
+                <div class="building main-building has-image" onclick="showInfo('main')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/1.png" alt="Főépület" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">FŐÉPÜLET</div>
+                        <div class="building-subtitle">Értékesítés • Hitel</div>
+                    </div>
+                </div>
+                
+                <div class="building service-building has-image" onclick="showInfo('service')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/3.png" alt="Szerviz" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">SZERVIZ</div>
+                        <div class="building-subtitle">Javítás</div>
+                    </div>
+                </div>
+                
+                <div class="building inspection-building has-image" onclick="showInfo('inspection')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/5.png" alt="Eredetiségvizsgálat" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">EREDETISÉG-</div>
+                        <div class="building-subtitle">VIZSGÁLAT</div>
+                    </div>
+                </div>
+                
+                <div class="building commercial-park has-image" onclick="showInfo('commercial')">
+                    <img src="https://github.com/fuzesianett1/terkep1/raw/95f5a7f85d8e3598cf82bc8c63660f4c16a3d53d/4.png" alt="Haszongépjármű park" class="building-image">
+                    <div class="building-text">
+                        <div class="building-title">HASZON-</div>
+                        <div class="building-subtitle">GÉPJÁRMŰ</div>
+                    </div>
+                </div><!DOCTYPE html>
 <html lang="hu">
 <head>
     <meta charset="UTF-8">
@@ -254,21 +285,23 @@
             border-radius: 2px;
         }
         
+        /* Keresztút - rövidebb, csak a főépület és eredetiségvizsgálat felé */
         .road-crossroad {
-            width: 130px;
+            width: 60px;
             height: 8px;
             top: 200px;
-            left: 100px;
+            left: 160px;
             position: absolute;
             background: #9ca3af;
             border-radius: 2px;
         }
         
+        /* Út a szervizhez - egyenesen felülről, mint az eredetiségvizsgálat */
         .road-to-service {
             width: 8px;
-            height: 100px;
-            top: 100px;
-            left: 120px;
+            height: 140px;
+            top: 60px;
+            left: 50px;
             position: absolute;
             background: #9ca3af;
             border-radius: 2px;
@@ -294,12 +327,12 @@
             border-radius: 2px;
         }
         
-        /* Oldalirányú út a főépülettől a szerviz vonaláig */
+        /* Összekötő út a főépület és szerviz között */
         .road-main-to-service {
-            width: 120px;
+            width: 130px;
             height: 8px;
             top: 200px;
-            left: 160px;
+            left: 50px;
             position: absolute;
             background: #9ca3af;
             border-radius: 2px;
@@ -314,6 +347,7 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
+            align-items: stretch;
         }
         
         .contact-item {
@@ -323,6 +357,11 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
         }
         
         .contact-item:hover {
@@ -441,5 +480,11 @@
             </div>
         </div>
     </div>
+    
+    <script>
+        function showInfo(building) {
+            alert('Épület információ: ' + building);
+        }
+    </script>
 </body>
 </html>
